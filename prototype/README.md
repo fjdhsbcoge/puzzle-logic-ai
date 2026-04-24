@@ -82,13 +82,9 @@ Your local 8B model will likely score somewhere in the 30-60% range. The questio
 4. Python 3.8+
 5. `pip install requests`
 
-### Quick Test (first 10 problems, ~2-3 minutes)
+### Quick Test (15 medium problems, ~5-8 minutes)
 
-```bash
-python humaneval_runner.py --mode both --limit 10
-```
-
-### Full Benchmark (all 164 problems, ~30-60 minutes depending on model speed)
+The default runs 15 **medium** problems where an 8B model should get ~40-70% in base mode, giving the OS room to recover from failures.
 
 ```bash
 python humaneval_runner.py --mode both
@@ -97,14 +93,20 @@ python humaneval_runner.py --mode both
 ### Options
 
 ```bash
-# Only base mode (pass@1)
-python humaneval_runner.py --mode base --limit 20
+# Medium subset (15 problems, default)
+python humaneval_runner.py --mode both --subset medium
 
-# Only OS mode with 5 candidates per problem
-python humaneval_runner.py --mode os --k 5 --limit 20
+# Hard subset (20 problems)
+python humaneval_runner.py --mode both --subset hard
 
-# Save results to custom file
-python humaneval_runner.py --output my_results.json
+# Full benchmark (164 problems)
+python humaneval_runner.py --mode both --subset full
+
+# Just 5 problems for a quick test
+python humaneval_runner.py --mode both --limit 5
+
+# Debug mode - see raw model output
+python humaneval_runner.py --mode both --debug
 ```
 
 ## Expected Output
