@@ -82,25 +82,51 @@ Your local 8B model will likely score somewhere in the 30-60% range. The questio
 4. Python 3.8+
 5. `pip install requests`
 
-### Quick Test (15 medium problems, ~5-8 minutes)
+### Full Benchmark — THE BIG ONE (~90-120 minutes)
 
-The default runs 15 **medium** problems where an 8B model should get ~40-70% in base mode, giving the OS room to recover from failures.
+This runs all 164 HumanEval problems grouped by difficulty tier. This is what you run to get impressive results for GitHub.
 
 ```bash
-python humaneval_runner.py --mode both
+python humaneval_full_runner.py --mode both
+```
+
+Output shows pass rates by tier:
+```
+Tier 1 (Easy)     41 problems   Base: 73.2%   OS: 87.8%   +14.6
+Tier 2 (Medium)   40 problems   Base: 52.5%   OS: 65.0%   +12.5
+Tier 3 (Hard)     40 problems   Base: 30.0%   OS: 42.5%   +12.5
+Tier 4 (Expert)   43 problems   Base: 16.3%   OS: 27.9%   +11.6
+OVERALL          164 problems   Base: 43.3%   OS: 56.1%   +12.8
+```
+
+### Quick Test (15 medium problems, ~5-8 minutes)
+
+For faster iteration during development:
+
+```bash
+python humaneval_runner.py --mode both --subset medium
 ```
 
 ### Options
 
 ```bash
-# Medium subset (15 problems, default)
+# Full 164-problem benchmark with tier breakdown
+python humaneval_full_runner.py --mode both
+
+# Medium subset (15 problems)
 python humaneval_runner.py --mode both --subset medium
 
 # Hard subset (20 problems)
 python humaneval_runner.py --mode both --subset hard
 
-# Full benchmark (164 problems)
+# Full benchmark without tier breakdown
 python humaneval_runner.py --mode both --subset full
+
+# Knowledge Graph generalization test
+python humaneval_kg_runner.py --mode both --subset medium
+
+# Knowledge Graph demo (4 related problems)
+python demo_knowledge_graph.py
 
 # Just 5 problems for a quick test
 python humaneval_runner.py --mode both --limit 5
