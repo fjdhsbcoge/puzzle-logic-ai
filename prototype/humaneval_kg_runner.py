@@ -318,6 +318,8 @@ def main():
     # Show what was learned
     stats = kg.get_stats()
     print(f"\n[LEARNED] {stats['n_solutions']} solutions stored in Knowledge Graph")
+    kg.print_contents()
+    kg.save_readable("kg_after_train.txt")
     
     # Phase 2: Test baseline — solve test problems WITHOUT KG
     print("\n" + "=" * 70)
@@ -340,6 +342,11 @@ def main():
     print("But it has validated solutions for similar train problems.")
     print("-" * 70)
     test_kg_results = run_benchmark(test_problems, synapse, kg, n_candidates=args.k, use_kg=True)
+    
+    # Show final KG state
+    print(f"\n[FINAL] Knowledge Graph after all phases:")
+    kg.print_contents()
+    kg.save_readable("kg_final.txt")
     
     # Comparison
     print_comparison(train_results, test_baseline_results, test_kg_results, kg.get_stats())

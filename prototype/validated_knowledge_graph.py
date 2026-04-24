@@ -172,6 +172,54 @@ class ValidatedKnowledgeGraph:
             "task_ids": [s.task_id for s in self.solutions],
         }
     
+    def print_contents(self):
+        """Print a human-readable summary of everything in the knowledge graph."""
+        print(f"\n{'='*60}")
+        print(f"KNOWLEDGE GRAPH CONTENTS ({len(self.solutions)} entries)")
+        print(f"{'='*60}")
+        
+        if not self.solutions:
+            print("  (empty)")
+            return
+        
+        for i, sol in enumerate(self.solutions, 1):
+            print(f"\n--- Entry {i}: {sol.task_id} ---")
+            print(f"  Problem: {sol.problem_description[:80]}")
+            print(f"  Confidence: {sol.confidence:.2f} | Accessed: {sol.access_count} times")
+            print(f"  Code ({len(sol.solution_code)} chars):")
+            # Print code with indentation
+            for line in sol.solution_code.split('\n')[:10]:  # First 10 lines
+                print(f"    {line}")
+            if len(sol.solution_code.split('\n')) > 10:
+                print(f"    ... ({len(sol.solution_code.split(chr(10))) - 10} more lines)")
+        
+        print(f"\n{'='*60}")
+    
+    def save_readable(self, filepath: str = "knowledge_graph_readable.txt"):
+        """Save a human-readable dump of the knowledge graph."""
+        with open(filepath, "w", encoding="utf-8") as f:
+            f.write(f"KNOWLEDGE GRAPH DUMP\n")
+            f.write(f"{'='*60}\n")
+            f.write(f"Total entries: {len(self.solutions)}\n")
+            f.write(f"Storage: {self.storage_path}\n\n")
+            
+            for i, sol in enumerate(self.solutions, 1):
+                f.write(f"\n{'='*60}\n")
+                f.write(f"ENTRY {i}: {sol.task_id}\n")
+                f.write(f"{'='*60}\n")
+                f.write(f"Problem: {sol.problem_description}\n")
+                f.write(f"Confidence: {sol.confidence:.2f}\n")
+                f.write(f"Attempts to solve: {sol.attempts}\n")
+                f.write(f"Times retrieved: {sol.access_count}\n")
+                f.write(f"Learned: {sol.timestamp}\n")
+                f.write(f"Test result: {sol.test_summary}\n")
+                f.write(f"\nSOLUTION CODE:\n")
+                f.write(f"```python\n{sol.solution_code}\n```\n")
+                if sol.reasoning_trace:
+                    f.write(f"\nREASONING TRACE:\n{sol.reasoning_trace}\n")
+        
+        print(f"  [KG] Readable dump saved to: {filepath}")
+    
     def _save(self):
         """Persist to disk."""
         data = [sol.to_dict() for sol in self.solutions]
