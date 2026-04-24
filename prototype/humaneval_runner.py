@@ -2,14 +2,13 @@
 HumanEval Runner for Puzzle Logic AI
 ======================================
 
-Runs the OpenAI HumanEval benchmark (164 Python programming problems)
-comparing base model (pass@1) against Puzzle Logic OS (adaptive best-of-k
-with CONCISE error feedback).
+Runs the OpenAI HumanEval benchmark comparing base model (pass@1)
+against Puzzle Logic OS (adaptive best-of-k with concise error feedback).
 
 Usage:
-    python humaneval_runner.py --mode base      # 1 candidate per problem
-    python humaneval_runner.py --mode os       # up to 3 candidates with feedback
-    python humaneval_runner.py --mode both     # run both, print comparison
+    python humaneval_runner.py --mode both --subset hard   # 20 hard problems
+    python humaneval_runner.py --mode both --limit 10       # first 10 problems
+    python humaneval_runner.py --mode both                  # all 164 problems
 """
 
 import json
@@ -25,106 +24,103 @@ from lmstudio_client import LMStudioClient
 
 HUMANEVAL_PATH = os.path.join(os.path.dirname(__file__), "HumanEval.jsonl")
 
+# Curated subset of genuinely hard problems where 8B models often fail.
+# Mix of: edge cases, parsing, algorithms, state machines, math.
+HARD_SUBSET = [
+    15, 22, 25, 32, 40, 45, 50, 55, 60,
+    65, 70, 75, 80, 85, 90, 95, 100, 110, 130, 160
+]
 
-def load_humaneval() -> List[Dict[str, Any]]:
+
+def load_humaneval(subset_indices=None) -> List[Dict[str, Any]]:
+    """Load HumanEval. Optionally select only specific indices."""
     problems = []
     with open(HUMANEVAL_PATH, "r", encoding="utf-8") as f:
         for line in f:
             problems.append(json.loads(line))
+    
+    if subset_indices:
+        subset = []
+        for idx in subset_indices:
+            if idx < len(problems):
+                subset.append(problems[idx])
+        return subset
+    
     return problems
 
 
 def extract_completion(text: str, problem: Dict) -> str:
-    """
-    Extract code from model output.
-    
-    HumanEval prompts already include the function signature. The model should
-    output only the function BODY. But sometimes it outputs the full function.
-    This handles both cases and fixes indentation.
-    """
+    """Extract code from model output. Handles body-only and full-function outputs."""
     if not text or not text.strip():
         return ""
     
     # 1. Try fenced code block
-    pattern = r"```(?:python)?\n(.*?)```"
-    match = re.search(pattern, text, re.DOTALL)
+    match = re.search(r"```(?:python)?\n(.*?)```", text, re.DOTALL)
     if match:
         text = match.group(1).strip()
     
-    # 2. Check if the model output the full function (including signature)
+    # 2. Check if model output the full function (including signature)
     entry_point = problem["entry_point"]
-    signature_pattern = rf"def\s+{re.escape(entry_point)}\s*\("
+    sig_pattern = rf"def\s+{re.escape(entry_point)}\s*\("
     
-    if re.search(signature_pattern, text):
-        # Model output the full function. Extract just the body.
+    if re.search(sig_pattern, text):
+        # Extract just the body
         lines = text.splitlines()
         body_lines = []
         in_body = False
         base_indent = None
+        docstring_open = False
         
         for line in lines:
-            # Skip the def line
-            if re.search(signature_pattern, line):
+            if re.search(sig_pattern, line):
                 in_body = True
                 continue
-            # Skip docstring lines
-            if in_body and '"""' in line:
-                # Check if docstring ends on same line
-                if line.strip().count('"""') == 2:
-                    continue
-                # Toggle docstring mode
+            if not in_body:
                 continue
-            if in_body:
-                # Skip empty lines at start of body
-                if not body_lines and not line.strip():
+            # Handle docstring toggling
+            if '"""' in line:
+                quote_count = line.count('"""')
+                if quote_count == 2:  # Single-line docstring
                     continue
-                # Calculate relative indentation
-                if line.strip():
-                    if base_indent is None:
-                        base_indent = len(line) - len(line.lstrip())
-                    # Remove the base indentation to make it absolute
-                    if len(line) >= base_indent:
-                        body_lines.append(line[base_indent:])
-                    else:
-                        body_lines.append(line.lstrip())
+                if quote_count == 1:
+                    docstring_open = not docstring_open
+                    continue
+            if docstring_open:
+                continue
+            # Collect body lines, normalizing indentation
+            if line.strip():
+                if base_indent is None:
+                    base_indent = len(line) - len(line.lstrip())
+                if len(line) >= base_indent:
+                    body_lines.append(line[base_indent:])
                 else:
-                    body_lines.append("")
+                    body_lines.append(line.lstrip())
+            else:
+                body_lines.append("")
         
         if body_lines:
             return "\n".join(body_lines).strip()
     
-    # 3. Check if text is properly indented (function body format)
+    # 3. Check if already properly indented
     lines = text.splitlines()
-    if lines:
-        first_content_line = None
-        for line in lines:
-            if line.strip():
-                first_content_line = line
-                break
-        
-        if first_content_line and first_content_line.startswith("    "):
-            # Already indented - good, return as-is
-            return text.strip()
-        
-        # 4. Not indented - add 4-space indentation to every non-empty line
-        # (the prompt expects function body, which is indented)
-        indented_lines = []
-        for line in lines:
-            if line.strip():
-                indented_lines.append("    " + line)
-            else:
-                indented_lines.append("")
-        
-        if indented_lines:
-            return "\n".join(indented_lines).strip()
+    for line in lines:
+        if line.strip():
+            if line.startswith("    "):
+                return text.strip()
+            break
     
-    return text.strip()
+    # 4. Not indented -- add 4-space indentation
+    indented = []
+    for line in lines:
+        if line.strip():
+            indented.append("    " + line)
+        else:
+            indented.append("")
+    return "\n".join(indented).strip()
 
 
 def run_test(problem: Dict, completion: str) -> Dict:
     """Test a completion against HumanEval test cases."""
-    # completion should be the function body (indented)
-    # We concatenate: prompt (has signature) + body + test
     test_program = (
         problem["prompt"] + "\n" +
         completion + "\n" +
@@ -140,9 +136,7 @@ def run_test(problem: Dict, completion: str) -> Dict:
         import subprocess
         result = subprocess.run(
             [sys.executable, temp_path],
-            capture_output=True,
-            text=True,
-            timeout=5
+            capture_output=True, text=True, timeout=5
         )
         passed = result.returncode == 0
         error = result.stderr if not passed else None
@@ -157,19 +151,26 @@ def run_test(problem: Dict, completion: str) -> Dict:
         os.unlink(temp_path)
 
 
-def build_prompt(problem: Dict, previous_errors: List[str] = None) -> str:
-    """
-    Build the prompt for the model.
-    
-    CRITICAL: The HumanEval prompt already contains the function signature.
-    The model must output ONLY the function body (indented code).
-    
-    Error feedback is SHORT — one concise line. Verbose feedback confuses
-    the model and causes malformed output.
-    """
+def extract_concise_error(error_text: str) -> str:
+    """Extract a concise error message from a traceback."""
+    if not error_text:
+        return "unknown error"
+    lines = error_text.strip().splitlines()
+    for line in reversed(lines):
+        line = line.strip()
+        if line.startswith("File \"") or line.startswith("^") or not line:
+            continue
+        if len(line) < 120:
+            return line
+    for line in reversed(lines):
+        if line.strip():
+            return line.strip()[:100]
+    return "unknown error"
+
+
+def build_prompt(problem: Dict, previous_errors=None) -> str:
+    """Build prompt with clear instructions and optional concise error feedback."""
     base = problem["prompt"]
-    
-    # Instruction about what to output
     instruction = (
         "\n\n"
         "INSTRUCTION: Complete the function above. "
@@ -178,68 +179,26 @@ def build_prompt(problem: Dict, previous_errors: List[str] = None) -> str:
         "Do NOT write a main block or test cases. "
         "Output your code inside a markdown code block."
     )
-    
     if previous_errors:
-        # Keep feedback SHORT — just the essential error, not a full traceback
-        last_error = previous_errors[-1]
-        # Extract just the error type and message, not the file path
-        concise_error = extract_concise_error(last_error)
-        
+        concise = extract_concise_error(previous_errors[-1])
         feedback = (
             f"\n\n"
-            f"FIX NEEDED: Your previous code failed with: {concise_error}\n"
+            f"FIX NEEDED: Previous code failed with: {concise}\n"
             f"Please correct this and output only the fixed function body."
         )
         return base + instruction + feedback
-    
     return base + instruction
 
 
-def extract_concise_error(error_text: str) -> str:
-    """
-    Extract a concise error description from a traceback.
-    
-    'File "/tmp/xyz.py", line 23\n    return groups\n    ^^^^^^^^^^^^^\nSyntaxError: return outside function'
-    
-    Becomes: 'SyntaxError: return outside function'
-    """
-    if not error_text:
-        return "unknown error"
-    
-    lines = error_text.strip().splitlines()
-    
-    # Look for the actual error line (usually the last line)
-    for line in reversed(lines):
-        line = line.strip()
-        # Skip file path lines
-        if line.startswith("File \"") or line.startswith("^") or not line:
-            continue
-        # This is likely the error message
-        if len(line) < 120:  # Keep it concise
-            return line
-    
-    # Fallback: return last non-empty line
-    for line in reversed(lines):
-        if line.strip():
-            return line.strip()[:100]
-    
-    return "unknown error"
-
-
-def run_base_mode(problems: List[Dict], synapse: LMStudioClient, limit: int = None) -> List[Dict]:
-    """BASE MODE: pass@1 — 1 candidate, no feedback, no retry."""
-    if limit:
-        problems = problems[:limit]
-    
+def run_base_mode(problems: List[Dict], synapse: LMStudioClient) -> List[Dict]:
+    """BASE MODE: pass@1."""
     results = []
     total = len(problems)
-    
     print(f"\n[BASE MODE] pass@1 on {total} problems...")
     print("-" * 60)
     
     for i, problem in enumerate(problems, 1):
         task_id = problem["task_id"]
-        
         prompt = build_prompt(problem)
         raw = synapse.generate(prompt=prompt, temperature=0.2, max_tokens=1024, n=1)
         
@@ -254,26 +213,15 @@ def run_base_mode(problems: List[Dict], synapse: LMStudioClient, limit: int = No
         
         results.append({"task_id": task_id, "passed": test_result["passed"],
                         "attempts": 1, "error": test_result["error"]})
-        
         status = "PASS" if test_result["passed"] else "FAIL"
         print(f"  [{i}/{total}] {task_id}: {status}")
-    
     return results
 
 
-def run_os_mode(problems: List[Dict], synapse: LMStudioClient, n_candidates: int = 3, limit: int = None) -> List[Dict]:
-    """
-    OS MODE: Adaptive best-of-k with CONCISE error feedback.
-    
-    Attempt 1: Base prompt
-    Attempt 2+: Short error feedback added to prompt
-    """
-    if limit:
-        problems = problems[:limit]
-    
+def run_os_mode(problems: List[Dict], synapse: LMStudioClient, n_candidates: int = 3) -> List[Dict]:
+    """OS MODE: Adaptive best-of-k with concise error feedback."""
     results = []
     total = len(problems)
-    
     print(f"\n[OS MODE] Adaptive best-of-{n_candidates} on {total} problems...")
     print("-" * 60)
     
@@ -286,7 +234,6 @@ def run_os_mode(problems: List[Dict], synapse: LMStudioClient, n_candidates: int
         
         for attempt in range(1, n_candidates + 1):
             prompt = build_prompt(problem, previous_errors if previous_errors else None)
-            
             raw = synapse.generate(prompt=prompt, temperature=0.3, max_tokens=1024, n=1)
             
             if not raw or not raw[0].strip():
@@ -297,7 +244,6 @@ def run_os_mode(problems: List[Dict], synapse: LMStudioClient, n_candidates: int
                 continue
             
             completion = extract_completion(raw[0], problem)
-            
             if not completion.strip():
                 best_attempts = attempt
                 err = "No code extracted"
@@ -320,20 +266,16 @@ def run_os_mode(problems: List[Dict], synapse: LMStudioClient, n_candidates: int
         
         if not best_passed:
             concise = extract_concise_error(best_error) if best_error else "unknown"
-            print(f"  [{i}/{total}] {task_id}: FAIL ({best_attempts} tries, last: {concise[:50]})")
+            print(f"  [{i}/{total}] {task_id}: FAIL ({best_attempts} tries, {concise[:50]})")
         
         results.append({
-            "task_id": task_id,
-            "passed": best_passed,
-            "attempts": best_attempts,
-            "error": best_error,
-            "feedback_used": len(previous_errors) > 0
+            "task_id": task_id, "passed": best_passed, "attempts": best_attempts,
+            "error": best_error, "feedback_used": len(previous_errors) > 0
         })
-    
     return results
 
 
-def print_comparison(base_results: List[Dict], os_results: List[Dict]):
+def print_comparison(base_results, os_results):
     print("\n" + "=" * 70)
     print("HUMANEVAL BENCHMARK RESULTS")
     print("=" * 70)
@@ -341,7 +283,6 @@ def print_comparison(base_results: List[Dict], os_results: List[Dict]):
     base_passed = sum(1 for r in base_results if r["passed"])
     os_passed = sum(1 for r in os_results if r["passed"])
     total = len(base_results)
-    
     base_rate = base_passed / total * 100
     os_rate = os_passed / total * 100
     improvement = os_rate - base_rate
@@ -357,32 +298,23 @@ def print_comparison(base_results: List[Dict], os_results: List[Dict]):
     print(f"{'Recoveries (OS saved base fail)':<35} {'-':<12} {recoveries}")
     print(f"{'Regressions (OS broke base pass)':<35} {'-':<12} {regressions}")
     print(f"{'Problems using feedback':<35} {'-':<12} {feedback_used}")
-    
     print("\n" + "-" * 70)
     print(f"IMPROVEMENT: {improvement:+.1f} percentage points")
     if improvement > 0 and base_passed > 0:
-        relative = (os_passed - base_passed) / base_passed * 100
-        print(f"RELATIVE GAIN: {relative:.0f}% more problems solved")
+        print(f"RELATIVE GAIN: {(os_passed - base_passed) / base_passed * 100:.0f}% more problems solved")
     elif improvement < 0:
         print(f"REGRESSION: OS scored {abs(improvement):.1f} points LOWER")
-        print("This means error feedback is HARMING performance.")
-        print("The feedback format needs further refinement.")
-    
-    print("\n" + "=" * 70)
+    print("=" * 70)
 
 
 def save_results(base_results, os_results, filename="humaneval_results.json"):
     data = {
         "benchmark": "HumanEval",
         "n_problems": len(base_results),
-        "base_mode": {
-            "pass_rate": sum(1 for r in base_results if r["passed"]) / len(base_results),
-            "results": base_results
-        },
-        "os_mode": {
-            "pass_rate": sum(1 for r in os_results if r["passed"]) / len(os_results),
-            "results": os_results
-        }
+        "base_mode": {"pass_rate": sum(1 for r in base_results if r["passed"]) / len(base_results),
+                      "results": base_results},
+        "os_mode": {"pass_rate": sum(1 for r in os_results if r["passed"]) / len(os_results),
+                    "results": os_results}
     }
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
@@ -392,26 +324,36 @@ def save_results(base_results, os_results, filename="humaneval_results.json"):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--mode", choices=["base", "os", "both"], default="both")
-    parser.add_argument("--limit", type=int, default=None)
+    parser.add_argument("--limit", type=int, default=None,
+                        help="Limit to first N problems from the selected set")
     parser.add_argument("--k", type=int, default=3)
     parser.add_argument("--output", type=str, default="humaneval_results.json")
+    parser.add_argument("--subset", choices=["hard", "full"], default="hard",
+                        help="Which problems to run: 'hard' = 20 curated hard problems, 'full' = all 164")
     args = parser.parse_args()
     
     if not os.path.exists(HUMANEVAL_PATH):
         print(f"ERROR: HumanEval not found at {HUMANEVAL_PATH}")
         sys.exit(1)
     
+    # Load problems based on subset selection
+    if args.subset == "hard":
+        problems = load_humaneval(subset_indices=HARD_SUBSET)
+        print(f"Running HARD subset: {len(problems)} curated challenging problems")
+    else:
+        problems = load_humaneval()
+        print(f"Running FULL benchmark: {len(problems)} problems")
+    
+    if args.limit:
+        problems = problems[:args.limit]
+        print(f"Limited to first {len(problems)} problems")
+    
     print("=" * 70)
-    print("PUZZLE LOGIC AI — HUMANEVAL BENCHMARK")
+    print("PUZZLE LOGIC AI - HUMANEVAL BENCHMARK")
     print("=" * 70)
     print()
-    print("FIX APPLIED: Concise error feedback + smart code extraction")
+    print(f"Subset: {args.subset.upper()} | Problems: {len(problems)} | Candidates: {args.k}")
     print("-" * 70)
-    
-    problems = load_humaneval()
-    print(f"Loaded {len(problems)} problems")
-    if args.limit:
-        print(f"Running first {args.limit} problems")
     
     synapse = LMStudioClient()
     print("\n[CHECK] LM Studio...")
@@ -424,9 +366,9 @@ def main():
     os_results = []
     
     if args.mode in ("base", "both"):
-        base_results = run_base_mode(problems, synapse, limit=args.limit)
+        base_results = run_base_mode(problems, synapse)
     if args.mode in ("os", "both"):
-        os_results = run_os_mode(problems, synapse, n_candidates=args.k, limit=args.limit)
+        os_results = run_os_mode(problems, synapse, n_candidates=args.k)
     
     if args.mode == "both" and base_results and os_results:
         print_comparison(base_results, os_results)
