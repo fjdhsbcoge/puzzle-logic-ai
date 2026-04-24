@@ -24,52 +24,52 @@ from datetime import datetime
 FAILURE_CATEGORIES = {
     "empty_input": {
         "patterns": ["empty list", "empty string", "empty tuple", "index out of range", "sequence has no elements"],
-        "prevention": "Always check if input is empty or None at the start of the function and return a sensible default.",
+        "prevention_rule": "Always check if input is empty or None at the start of the function and return a sensible default.",
         "examples": ["if not items: return []", "if not s: return 0", "if text is None: return ''"],
     },
     "type_mismatch": {
         "patterns": ["unsupported operand type", "can only concatenate", "not supported between instances", "type error", "expected str"],
-        "prevention": "Verify the types of inputs before operations. Convert or guard if mixed types are possible.",
+        "prevention_rule": "Verify the types of inputs before operations. Convert or guard if mixed types are possible.",
         "examples": ["ensure all elements are int", "convert to str before concatenation"],
     },
     "off_by_one": {
         "patterns": ["index out of range", "list index out of range", "string index out of range"],
-        "prevention": "Double-check all indices and loop bounds. Use len()-1 for last element, and guard empty sequences.",
+        "prevention_rule": "Double-check all indices and loop bounds. Use len()-1 for last element, and guard empty sequences.",
         "examples": ["range(len(arr)-1)", "check index < len(arr)"],
     },
     "none_return": {
         "patterns": ["typeerror: 'nonetype'", "cannot unpack non-iterable", "none has no"],
-        "prevention": "Ensure all code paths return a value. If returning early, return the expected type.",
+        "prevention_rule": "Ensure all code paths return a value. If returning early, return the expected type.",
         "examples": ["if not found: return -1", "initialize result before conditions"],
     },
     "zero_division": {
         "patterns": ["division by zero", "zero divisor", "float division by zero"],
-        "prevention": "Check if denominator is zero before division. Return a default or raise an appropriate error.",
+        "prevention_rule": "Check if denominator is zero before division. Return a default or raise an appropriate error.",
         "examples": ["if b == 0: return None", "handle zero case explicitly"],
     },
     "name_error": {
         "patterns": ["nameerror", "is not defined", "undefined variable"],
-        "prevention": "Verify all variables are initialized before use. Check for typos and scoping issues.",
+        "prevention_rule": "Verify all variables are initialized before use. Check for typos and scoping issues.",
         "examples": ["initialize accumulator before loop", "check variable names for typos"],
     },
     "syntax_error_string": {
         "patterns": ["unterminated string literal", "eol while scanning string", "invalid character"],
-        "prevention": "Do not include explanatory text or thinking traces inside the code block. Output only clean Python code.",
+        "prevention_rule": "Do not include explanatory text or thinking traces inside the code block. Output only clean Python code.",
         "examples": ["remove all comments and markdown", "no quotes around explanations"],
     },
     "syntax_error_indent": {
         "patterns": ["indentationerror", "unexpected indent", "unindent does not match"],
-        "prevention": "Ensure consistent indentation (4 spaces per level). Do not mix tabs and spaces.",
+        "prevention_rule": "Ensure consistent indentation (4 spaces per level). Do not mix tabs and spaces.",
         "examples": ["use 4 spaces", "check for mixed tabs/spaces"],
     },
     "assertion_error": {
         "patterns": ["assertionerror", "assertion failed", "check() failed"],
-        "prevention": "The output does not match expected behavior. Re-read the problem requirements and all edge cases carefully.",
+        "prevention_rule": "The output does not match expected behavior. Re-read the problem requirements and all edge cases carefully.",
         "examples": ["check all edge cases", "verify return values match exactly"],
     },
     "timeout": {
         "patterns": ["timeout"],
-        "prevention": "The solution may have an infinite loop or be too slow. Check loop termination conditions and consider a more efficient algorithm.",
+        "prevention_rule": "The solution may have an infinite loop or be too slow. Check loop termination conditions and consider a more efficient algorithm.",
         "examples": ["ensure loop increments/decrements", "use memoization or iteration instead of deep recursion"],
     },
 }
