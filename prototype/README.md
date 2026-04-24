@@ -22,16 +22,42 @@ We use the **OpenAI HumanEval** benchmark — the industry standard for code gen
 - **Exact fit for our architecture** — the test cases ARE the constraint engine
 - **Clear metric** — `pass@k`: percentage of problems solved with k attempts
 
-### The Comparison
+### The Comparison: Base Model vs Puzzle Logic OS
 
 | | **Base Model** | **Puzzle Logic OS** |
 |---|---|---|
-| **Candidates per problem** | 1 (pass@1) | Up to 3 (best-of-k) |
-| **Selection** | Blind acceptance | Empirical: pick candidate that passes most tests |
-| **On failure** | Problem is failed | Try next candidate |
-| **Metric** | `pass@1` | Best-of-k with test validation |
+| **Candidates per problem** | 1 (pass@1) | Up to 3 (adaptive) |
+| **Selection** | Blind acceptance | Empirical: pick candidate that passes tests |
+| **Error feedback** | **NONE** — model never sees failures | **ACTIVE** — failed attempts inform next candidate |
+| **Adaptation** | **NONE** — static, same prompt every time | **IN-CONTEXT** — prompt changes based on errors |
+| **Metric** | `pass@1` | Best-of-k with feedback loop |
 
-**The hypothesis:** On problems where the model's first attempt is subtly wrong, the OS recovers by trying again and selecting the candidate that actually passes the tests.
+### The Adaptation Mechanism (This Is The Key Difference)
+
+**Base Model:**
+```
+Problem -> Generate 1 candidate -> Test -> Pass/Fail (end)
+```
+If the candidate fails, that's it. The model never learns why.
+
+**Puzzle Logic OS:**
+```
+Problem -> Generate candidate 1 -> Test -> If FAIL:
+              |
+              v
+         Error message captured
+              |
+              v
+         Add error to prompt: "Your previous attempt failed because..."
+              |
+              v
+         Generate candidate 2 (model sees the mistake)
+              |
+              v
+         Test -> If FAIL, repeat up to k times
+```
+
+The **same model** with **same weights** generates the candidates. What changes is the **input prompt** — it now contains empirical feedback from previous attempts. This is **real in-context adaptation** without any fine-tuning.
 
 ### Baselines (published, for comparison)
 
@@ -44,7 +70,7 @@ We use the **OpenAI HumanEval** benchmark — the industry standard for code gen
 | DeepSeek-Coder-6.7B | ~47% |
 | Qwen2.5-Coder-7B | ~80% |
 
-Your local 8B model will likely score somewhere in the 30-60% range. The question is: **does the OS improve that score?**
+Your local 8B model will likely score somewhere in the 30-60% range. The question is: **does the OS improve that score by learning from errors?**
 
 ## Run the HumanEval Benchmark
 

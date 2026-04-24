@@ -1,11 +1,11 @@
 """
 LM Studio Client
 Connects to the local LM Studio OpenAI-compatible API.
-Default endpoint: http://localhost:1234/v1
+Handles DeepSeek R1 reasoning traces and code extraction.
 """
 
 import requests
-import json
+import re
 
 
 class LMStudioClient:
@@ -43,13 +43,37 @@ class LMStudioClient:
                 )
                 response.raise_for_status()
                 data = response.json()
-                content = data["choices"][0]["message"]["content"]
+                
+                msg = data["choices"][0]["message"]
+                
+                # DeepSeek R1 models may put reasoning in a separate field.
+                # Try content first, then reasoning_content, then reasoning.
+                content = msg.get("content", "")
+                if not content.strip() and "reasoning_content" in msg:
+                    content = msg["reasoning_content"]
+                if not content.strip() and "reasoning" in msg:
+                    content = msg["reasoning"]
+                
+                # Some models wrap reasoning in <think>...</think> tags.
+                # Remove those to get the actual answer.
+                content = self._strip_think_tags(content)
+                
                 candidates.append(content)
             except Exception as e:
                 print(f"[LM Studio Error] {e}")
                 candidates.append("")
         
         return candidates
+    
+    def _strip_think_tags(self, text):
+        """Remove <think>...</think> reasoning blocks from DeepSeek R1."""
+        if not text:
+            return ""
+        # Remove <think>...</think> content
+        text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL)
+        # Also handle variations
+        text = re.sub(r"<thinking>.*?</thinking>", "", text, flags=re.DOTALL)
+        return text.strip()
     
     def check_health(self):
         """Check if LM Studio server is running."""
