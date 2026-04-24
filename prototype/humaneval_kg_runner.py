@@ -1,21 +1,25 @@
 """
-HumanEval Runner WITH Knowledge Graph
-======================================
+HumanEval Runner WITH Knowledge Graph — Generalization Test
+=============================================================
 
-This version integrates the ValidatedKnowledgeGraph into the benchmark.
+This benchmark tests whether the Knowledge Graph enables GENERALIZATION,
+not memorization.
 
-How it works:
-  Phase 1 (LEARN): Run the benchmark WITHOUT knowledge graph help.
-                   Every successful solution is stored in the KG.
-  Phase 2 (RECALL): Run the benchmark AGAIN, but now the model
-                    receives few-shot examples from the KG for
-                    similar past problems.
+Design:
+  1. SPLIT problems into two disjoint sets:
+     - TRAIN set: ~60% of problems (solved without KG, stored in KG)
+     - TEST set:  ~40% of problems (never seen before)
+  2. Solve TRAIN problems WITHOUT knowledge graph help
+     → Store every success in the ValidatedKnowledgeGraph
+  3. Solve TEST problems WITH knowledge graph help
+     → KG retrieves SIMILAR past solutions as few-shot examples
+     → Model has NEVER seen these exact problems before
+  4. ALSO solve TEST problems WITHOUT knowledge graph
+     → Baseline: how well does the model do on its own?
+  5. Compare: does KG help on genuinely new problems?
 
-This demonstrates compounding expertise: the agent gets better
-because it accumulates only empirically validated knowledge.
-
-Usage:
-    python humaneval_kg_runner.py --mode both --subset medium
+This tests the REAL question: does accumulating validated knowledge
+about one set of problems help you solve a DIFFERENT set?
 """
 
 import json
@@ -32,11 +36,13 @@ from validated_knowledge_graph import ValidatedKnowledgeGraph
 
 HUMANEVAL_PATH = os.path.join(os.path.dirname(__file__), "HumanEval.jsonl")
 
+# Medium subset — 15 problems total
 MEDIUM_SUBSET = [3, 5, 8, 10, 12, 16, 26, 28, 29, 30, 31, 36, 42, 43, 48]
-HARD_SUBSET = [
-    15, 22, 25, 32, 40, 45, 50, 55, 60,
-    65, 70, 75, 80, 85, 90, 95, 100, 110, 130, 160
-]
+
+# Split: first 9 are TRAIN, last 6 are TEST
+# TRAIN (indices 0-8): 3, 5, 8, 10, 12, 16, 26, 28, 29
+# TEST  (indices 9-14): 30, 31, 36, 42, 43, 48
+TRAIN_COUNT = 9
 
 
 def load_humaneval(subset_indices=None) -> List[Dict[str, Any]]:
@@ -102,10 +108,7 @@ def build_prompt(problem: Dict, few_shot: str = "") -> str:
 
 def solve_problem(problem: Dict, synapse: LMStudioClient, kg: ValidatedKnowledgeGraph,
                   n_candidates: int = 3, use_kg: bool = True) -> Dict:
-    """
-    Solve a single problem with optional Knowledge Graph assistance.
-    Returns result and stores successful solutions in KG.
-    """
+    """Solve a single problem with optional Knowledge Graph assistance."""
     task_id = problem["task_id"]
     
     # Get few-shot example from KG if available
@@ -113,12 +116,11 @@ def solve_problem(problem: Dict, synapse: LMStudioClient, kg: ValidatedKnowledge
     if use_kg:
         few_shot = kg.build_few_shot_prompt(problem["prompt"], problem["entry_point"])
         if few_shot:
-            print(f"    [KG] Using similar past solution as few-shot example")
+            print(f"    [KG] Found similar past solution as few-shot example")
     
     prompt = build_prompt(problem, few_shot)
     
     previous_errors = []
-    best_completion = ""
     
     for attempt in range(1, n_candidates + 1):
         if previous_errors:
@@ -138,11 +140,10 @@ def solve_problem(problem: Dict, synapse: LMStudioClient, kg: ValidatedKnowledge
             previous_errors.append("No code extracted")
             continue
         
-        best_completion = completion
         test_result = run_test(problem, completion)
         
         if test_result["passed"]:
-            # SUCCESS! Store in Knowledge Graph
+            # Store in KG if this is a training problem
             kg.add_solution(
                 task_id=task_id,
                 problem_description=problem["prompt"].split("\n")[1] if len(problem["prompt"].split("\n")) > 1 else task_id,
@@ -161,7 +162,6 @@ def solve_problem(problem: Dict, synapse: LMStudioClient, kg: ValidatedKnowledge
         else:
             previous_errors.append(test_result["error"])
     
-    # All attempts failed
     return {
         "task_id": task_id,
         "passed": False,
@@ -173,7 +173,7 @@ def solve_problem(problem: Dict, synapse: LMStudioClient, kg: ValidatedKnowledge
 
 def run_benchmark(problems: List[Dict], synapse: LMStudioClient, kg: ValidatedKnowledgeGraph,
                   n_candidates: int = 3, use_kg: bool = True) -> List[Dict]:
-    """Run the full benchmark, optionally with Knowledge Graph."""
+    """Run benchmark on a set of problems."""
     results = []
     total = len(problems)
     
@@ -193,68 +193,69 @@ def run_benchmark(problems: List[Dict], synapse: LMStudioClient, kg: ValidatedKn
     return results
 
 
-def print_comparison(results_without_kg: List[Dict], results_with_kg: List[Dict]):
-    """Print the comparison showing compounding expertise."""
+def print_comparison(train_results: List[Dict], test_baseline: List[Dict], test_with_kg: List[Dict],
+                     kg_stats: Dict):
+    """Print the generalization comparison."""
     print("\n" + "=" * 70)
-    print("HUMANEVAL BENCHMARK: KNOWLEDGE GRAPH COMPARISON")
+    print("HUMANEVAL: KNOWLEDGE GRAPH GENERALIZATION TEST")
     print("=" * 70)
     
-    passed_without = sum(1 for r in results_without_kg if r["passed"])
-    passed_with = sum(1 for r in results_with_kg if r["passed"])
-    total = len(results_without_kg)
+    train_passed = sum(1 for r in train_results if r["passed"])
+    test_base_passed = sum(1 for r in test_baseline if r["passed"])
+    test_kg_passed = sum(1 for r in test_with_kg if r["passed"])
     
-    rate_without = passed_without / total * 100
-    rate_with = passed_with / total * 100
-    improvement = rate_with - rate_without
+    print(f"\n--- TRAIN SET ({len(train_results)} problems, NEVER seen by test) ---")
+    print(f"  Solved: {train_passed}/{len(train_results)} -> stored in Knowledge Graph")
     
-    # Count how many were saved by KG
-    kg_saved = sum(1 for wo, w in zip(results_without_kg, results_with_kg)
-                   if not wo["passed"] and w["passed"])
+    print(f"\n--- TEST SET ({len(test_baseline)} problems, COMPLETELY NEW) ---")
+    print(f"  Without KG: {test_base_passed}/{len(test_baseline)} passed")
+    print(f"  With KG:    {test_kg_passed}/{len(test_baseline)} passed")
     
-    # Count how many had KG help
-    kg_assisted = sum(1 for r in results_with_kg if r.get("used_kg"))
+    improvement = (test_kg_passed - test_base_passed) / len(test_baseline) * 100
     
-    print(f"\n{'Metric':<40} {'No KG':<12} {'With KG':<12}")
-    print("-" * 70)
-    print(f"{'Problems solved':<40} {passed_without}/{total:<12} {passed_with}/{total}")
-    print(f"{'Pass rate':<40} {rate_without:.1f}%{'':<8} {rate_with:.1f}%")
-    print(f"{'Problems with KG assistance':<40} {'-':<12} {kg_assisted}")
-    print(f"{'Problems saved by KG':<40} {'-':<12} {kg_saved}")
+    # How many were saved by KG?
+    kg_saved = sum(1 for b, k in zip(test_baseline, test_with_kg)
+                   if not b["passed"] and k["passed"])
+    kg_harmed = sum(1 for b, k in zip(test_baseline, test_with_kg)
+                    if b["passed"] and not k["passed"])
     
-    print("\n" + "-" * 70)
-    print(f"IMPROVEMENT: {improvement:+.1f} percentage points")
-    if improvement > 0 and passed_without > 0:
-        print(f"RELATIVE GAIN: {(passed_with - passed_without) / passed_without * 100:.0f}% more problems solved")
+    print(f"\n--- KEY METRIC: GENERALIZATION ---")
+    print(f"  Improvement: {improvement:+.1f} percentage points")
+    print(f"  NEW problems saved by KG: {kg_saved}")
+    print(f"  NEW problems harmed by KG: {kg_harmed}")
+    print(f"  Knowledge Graph entries: {kg_stats['n_solutions']}")
     
     print("\n" + "=" * 70)
     print("INTERPRETATION")
     print("=" * 70)
     
-    if kg_saved > 0:
-        print(f"The Knowledge Graph provided genuine value on {kg_saved} problem(s).")
-        print("The agent remembered similar past successes and applied them.")
-        print("This is compounding expertise: each success makes future successes more likely.")
+    if kg_saved > 0 and kg_harmed == 0:
+        print("SUCCESS: The Knowledge Graph enables genuine generalization.")
+        print("The agent solved NEW problems by applying knowledge from OLD problems.")
+        print("This is NOT memorization — the test problems were never seen before.")
+    elif kg_saved > 0:
+        print("PARTIAL: The Knowledge Graph helps on some new problems,")
+        print("but causes regressions on others. The few-shot examples")
+        print("sometimes confuse the model.")
     elif improvement > 0:
-        print("The Knowledge Graph helped, but mostly through the multi-candidate mechanism.")
-        print("Few-shot examples were not the primary driver.")
+        print("MODEST: Slight improvement, but not from generalization.")
+        print("The multi-candidate mechanism is the main driver.")
     else:
-        print("No improvement from the Knowledge Graph in this run.")
+        print("NO GENERALIZATION: The Knowledge Graph did not help on new problems.")
         print("Possible reasons:")
-        print("  - Problems are too diverse for similarity matching")
-        print("  - The model is already saturated on this subset")
-        print("  - Need a larger, more related problem set")
+        print("  - Train and test problems are too different")
+        print("  - The similarity matching is too crude")
+        print("  - The model doesn't know how to adapt examples to new contexts")
     
     print("=" * 70)
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mode", choices=["learn", "recall", "both"], default="both",
-                        help="'learn' = populate KG, 'recall' = use KG, 'both' = compare")
     parser.add_argument("--subset", choices=["medium", "hard", "full"], default="medium")
-    parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--k", type=int, default=3)
     parser.add_argument("--output", type=str, default="humaneval_kg_results.json")
+    parser.add_argument("--debug", action="store_true")
     args = parser.parse_args()
     
     if not os.path.exists(HUMANEVAL_PATH):
@@ -272,25 +273,27 @@ def main():
         problems = load_humaneval()
         print(f"FULL benchmark: {len(problems)} problems")
     
-    if args.limit:
-        problems = problems[:args.limit]
-        print(f"Limited to first {len(problems)} problems")
+    # Split into train and test
+    train_problems = problems[:TRAIN_COUNT]
+    test_problems = problems[TRAIN_COUNT:]
+    
+    print(f"Split: {len(train_problems)} TRAIN + {len(test_problems)} TEST")
+    print(f"Train problems: {[p['task_id'] for p in train_problems]}")
+    print(f"Test problems:  {[p['task_id'] for p in test_problems]}")
     
     print("=" * 70)
-    print("PUZZLE LOGIC AI - HUMANEVAL WITH KNOWLEDGE GRAPH")
+    print("PUZZLE LOGIC AI - KNOWLEDGE GRAPH GENERALIZATION TEST")
     print("=" * 70)
     print()
-    print("This benchmark demonstrates compounding expertise.")
+    print("This benchmark tests whether the Knowledge Graph enables")
+    print("GENERALIZATION to new problems, not just memorization.")
     print()
-    print("Phase 1 (LEARN):  Solve problems WITHOUT knowledge graph.")
-    print("                  Store every success in the ValidatedKnowledgeGraph.")
+    print("Train set: 9 problems solved WITHOUT KG -> stored in KG")
+    print("Test set:  6 problems the model has NEVER seen")
+    print("           solved WITH and WITHOUT KG -> compare")
     print()
-    print("Phase 2 (RECALL): Solve the SAME problems WITH knowledge graph.")
-    print("                  The model receives few-shot examples from past successes.")
-    print()
-    print("Hypothesis: The agent improves because it accumulates ONLY")
-    print("empirically validated knowledge. Each success makes the next")
-    print("success more likely.")
+    print("Key question: Does knowing about 'count vowels' help")
+    print("             the model solve 'count consonants'?")
     print("-" * 70)
     
     synapse = LMStudioClient()
@@ -300,61 +303,61 @@ def main():
         sys.exit(1)
     print("  OK")
     
-    # Setup knowledge graph
+    # Setup fresh knowledge graph
     kg_path = "humaneval_knowledge_graph.json"
     if os.path.exists(kg_path):
         os.remove(kg_path)
     kg = ValidatedKnowledgeGraph(storage_path=kg_path)
     
-    results_without = []
-    results_with = []
+    # Phase 1: Train — solve train problems WITHOUT KG
+    print("\n" + "=" * 70)
+    print("PHASE 1: TRAIN (no KG help)")
+    print("=" * 70)
+    train_results = run_benchmark(train_problems, synapse, kg, n_candidates=args.k, use_kg=False)
     
-    # Phase 1: LEARN (without KG)
-    if args.mode in ("learn", "both"):
-        print("\n" + "=" * 70)
-        print("PHASE 1: LEARNING (without Knowledge Graph)")
-        print("=" * 70)
-        results_without = run_benchmark(problems, synapse, kg, n_candidates=args.k, use_kg=False)
-        
-        # Show what was learned
-        stats = kg.get_stats()
-        print(f"\n[LEARNED] {stats['n_solutions']} solutions stored in Knowledge Graph")
+    # Show what was learned
+    stats = kg.get_stats()
+    print(f"\n[LEARNED] {stats['n_solutions']} solutions stored in Knowledge Graph")
     
-    # Phase 2: RECALL (with KG)
-    if args.mode in ("recall", "both"):
-        # For 'both' mode, we run the SAME problems again with KG enabled
-        # For 'recall' mode, we assume the KG was populated in a previous run
-        if args.mode == "both":
-            print("\n" + "=" * 70)
-            print("PHASE 2: RECALL (with Knowledge Graph)")
-            print("=" * 70)
-            print("Now the model has access to validated past solutions.")
-            print("-" * 70)
-        
-        results_with = run_benchmark(problems, synapse, kg, n_candidates=args.k, use_kg=True)
+    # Phase 2: Test baseline — solve test problems WITHOUT KG
+    print("\n" + "=" * 70)
+    print("PHASE 2A: TEST WITHOUT KG (baseline)")
+    print("=" * 70)
+    test_baseline_results = run_benchmark(test_problems, synapse, kg, n_candidates=args.k, use_kg=False)
+    
+    # IMPORTANT: Remove test solutions from KG so they can't be memorized
+    # The KG should only contain train solutions
+    # (The solve_problem function stores successes, so we need to remove test ones)
+    for result in test_baseline_results:
+        kg.solutions = [s for s in kg.solutions if s.task_id != result["task_id"]]
+    kg._save()
+    
+    # Phase 3: Test with KG — solve SAME test problems WITH KG
+    print("\n" + "=" * 70)
+    print("PHASE 2B: TEST WITH KG (generalization)")
+    print("=" * 70)
+    print("The model has NEVER seen these test problems.")
+    print("But it has validated solutions for similar train problems.")
+    print("-" * 70)
+    test_kg_results = run_benchmark(test_problems, synapse, kg, n_candidates=args.k, use_kg=True)
     
     # Comparison
-    if args.mode == "both" and results_without and results_with:
-        print_comparison(results_without, results_with)
-        
-        # Compute pass counts for saving
-        passed_without = sum(1 for r in results_without if r["passed"])
-        passed_with = sum(1 for r in results_with if r["passed"])
-        
-        # Save results
-        data = {
-            "benchmark": "HumanEval",
-            "subset": args.subset,
-            "n_problems": len(problems),
-            "without_kg": {"pass_rate": passed_without / len(results_without) if results_without else 0,
-                           "results": results_without},
-            "with_kg": {"pass_rate": passed_with / len(results_with) if results_with else 0,
-                        "results": results_with},
-            "kg_stats": kg.get_stats()
-        }
-        with open(args.output, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2)
-        print(f"\nResults saved to: {args.output}")
+    print_comparison(train_results, test_baseline_results, test_kg_results, kg.get_stats())
+    
+    # Save results
+    data = {
+        "benchmark": "HumanEval",
+        "subset": args.subset,
+        "train_problems": [p["task_id"] for p in train_problems],
+        "test_problems": [p["task_id"] for p in test_problems],
+        "train_results": train_results,
+        "test_baseline": test_baseline_results,
+        "test_with_kg": test_kg_results,
+        "kg_stats": kg.get_stats()
+    }
+    with open(args.output, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
+    print(f"\nResults saved to: {args.output}")
     
     # Cleanup
     if os.path.exists(kg_path):
