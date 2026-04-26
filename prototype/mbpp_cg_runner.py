@@ -166,7 +166,8 @@ def build_prompt(problem: Dict, contract_hint: str = "") -> str:
 
 
 def solve_problem(problem: Dict, synapse: LMStudioClient, cg: ContractGraph,
-                  n_candidates: int = 3, learn: bool = True, debug: bool = False) -> Dict:
+                  n_candidates: int = 3, learn: bool = True, debug: bool = False,
+                  max_tokens: int = 2048) -> Dict:
     """
     Solve a single problem with optional Contract Graph learning.
     
@@ -191,7 +192,7 @@ def solve_problem(problem: Dict, synapse: LMStudioClient, cg: ContractGraph,
         else:
             attempt_prompt = prompt
         
-        raw = synapse.generate(prompt=attempt_prompt, temperature=0.3, max_tokens=args.max_tokens, n=1)
+        raw = synapse.generate(prompt=attempt_prompt, temperature=0.3, max_tokens=max_tokens, n=1)
         
         if debug:
             print(f"    [Attempt {attempt}] Raw response length: {len(raw[0]) if raw else 0}")
@@ -262,7 +263,8 @@ def solve_problem(problem: Dict, synapse: LMStudioClient, cg: ContractGraph,
 
 
 def run_benchmark(problems: List[Dict], synapse: LMStudioClient,
-                  cg: ContractGraph, n_candidates: int = 3, debug: bool = False) -> List[Dict]:
+                  cg: ContractGraph, n_candidates: int = 3, debug: bool = False,
+                  max_tokens: int = 2048) -> List[Dict]:
     """Run full benchmark with Contract Graph learning."""
     results = []
     total = len(problems)
@@ -284,7 +286,7 @@ def run_benchmark(problems: List[Dict], synapse: LMStudioClient,
         n_contracts = len(cg.nodes)
         print(f"\n[{i}/{total}] {task_id} | Graph has {n_contracts} contracts")
         
-        result = solve_problem(problem, synapse, cg, n_candidates=n_candidates, learn=True, debug=debug)
+        result = solve_problem(problem, synapse, cg, n_candidates=n_candidates, learn=True, debug=debug, max_tokens=max_tokens)
         results.append(result)
         
         status = "PASS" if result["passed"] else "FAIL"
@@ -385,7 +387,7 @@ def main():
     print(f"\n[INIT] Contract Graph is empty: {len(cg.nodes)} contracts")
     
     # Run benchmark
-    results = run_benchmark(problems, synapse, cg, n_candidates=args.k, debug=args.debug)
+    results = run_benchmark(problems, synapse, cg, n_candidates=args.k, debug=args.debug, max_tokens=args.max_tokens)
     
     # Analysis
     print_sliding_window(results, window=50)
