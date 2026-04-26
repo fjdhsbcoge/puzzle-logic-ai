@@ -22,7 +22,7 @@ class LMStudioClient:
         Returns a list of candidate strings.
         """
         messages = [
-            {"role": "system", "content": "You are a helpful coding assistant. Write clean, correct Python code. Output only the code inside a markdown code block. Do not include explanations outside the code block."},
+            {"role": "system", "content": "You are a code generator. Output ONLY a markdown code block containing the Python function. Do NOT explain. Do NOT show reasoning. Do NOT think step by step. No preamble, no commentary, no analysis. Just the code inside triple backticks."},
             {"role": "user", "content": prompt}
         ]
         

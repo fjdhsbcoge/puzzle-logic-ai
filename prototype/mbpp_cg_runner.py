@@ -81,13 +81,50 @@ def load_mbpp() -> List[Dict[str, Any]]:
 
 
 def extract_code(text: str) -> str:
+    """Extract code from model response, handling reasoning + code mixes."""
     if not text:
         return ""
+    
+    # 1. Try fenced code block with python tag
     match = re.search(r"```(?:python)?\n(.*?)```", text, re.DOTALL)
     if match:
         return match.group(1).strip()
-    if "def " in text or "return" in text or "for " in text:
-        return text.strip()
+    
+    # 2. Try fenced code block at end of text (model may close with just ```)
+    match = re.search(r"```\n?(.*?)```", text, re.DOTALL)
+    if match:
+        return match.group(1).strip()
+    
+    # 3. Try to find "def " and extract from there to end or next paragraph break
+    def_match = re.search(r"\n?(def\s+\w+\s*\([^)]*\)\s*:[\s\S]*?)(?=\n\n[A-Z]|\n\n[A-Za-z]+\s+|$)", text)
+    if def_match:
+        return def_match.group(1).strip()
+    
+    # 4. Fallback: look for any line starting with def / return / for / if / import
+    code_lines = []
+    started = False
+    for line in text.split("\n"):
+        stripped = line.strip()
+        if not started:
+            if stripped.startswith(("def ", "import ", "from ", "class ")):
+                started = True
+                code_lines.append(line)
+        else:
+            # Continue until we hit a blank line followed by non-code text
+            if stripped == "":
+                # Check if next non-empty line is code-like
+                continue
+            if stripped.startswith(("def ", "import ", "from ", "class ", "return", "if ", "for ", "while ", "try:", "with ")):
+                code_lines.append(line)
+            elif not stripped.startswith(("#", " ", "\t")) and code_lines:
+                # Non-indented, non-comment, non-keyword line after code = end
+                break
+            else:
+                code_lines.append(line)
+    
+    if code_lines:
+        return "\n".join(code_lines).strip()
+    
     return ""
 
 
@@ -155,7 +192,7 @@ def solve_problem(problem: Dict, synapse: LMStudioClient, cg: ContractGraph,
         else:
             attempt_prompt = prompt
         
-        raw = synapse.generate(prompt=attempt_prompt, temperature=0.3, max_tokens=512, n=1)
+        raw = synapse.generate(prompt=attempt_prompt, temperature=0.3, max_tokens=1024, n=1)
         
         if debug:
             print(f"    [Attempt {attempt}] Raw response length: {len(raw[0]) if raw else 0}")
