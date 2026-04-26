@@ -345,10 +345,10 @@ def main():
     parser.add_argument("--output", type=str, default="mbpp_cg_results.json")
     parser.add_argument("--debug", action="store_true",
                         help="Print detailed per-attempt diagnostics")
-    parser.add_argument("--model", type=str, default="deepseek-r1-distill-qwen-7b",
-                        help="LM Studio model ID to use")
-    parser.add_argument("--max-tokens", type=int, default=2048,
-                        help="Max tokens per generation (R1 needs 2048+ for reasoning+code)")
+    parser.add_argument("--model", type=str, default=None,
+                        help="LM Studio model ID (find with: python -c \"import requests; print(requests.get('http://localhost:1234/v1/models').json())\")")
+    parser.add_argument("--max-tokens", type=int, default=1024,
+                        help="Max tokens per generation (1024 for 4B-7B models, 2048+ for R1 reasoning)")
     parser.add_argument("--timeout", type=int, default=600,
                         help="HTTP timeout in seconds (default 600 = 10 minutes)")
     args = parser.parse_args()
