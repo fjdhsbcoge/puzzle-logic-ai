@@ -130,7 +130,7 @@ def build_prompt(problem: Dict, contract_hint: str = "") -> str:
 
 
 def solve_problem(problem: Dict, synapse: LMStudioClient, cg: ContractGraph,
-                  n_candidates: int = 3, learn: bool = True) -> Dict:
+                  n_candidates: int = 3, learn: bool = True, debug: bool = False) -> Dict:
     """
     Solve a single problem with optional Contract Graph learning.
     
@@ -157,17 +157,37 @@ def solve_problem(problem: Dict, synapse: LMStudioClient, cg: ContractGraph,
         
         raw = synapse.generate(prompt=attempt_prompt, temperature=0.3, max_tokens=1024, n=1)
         
+        if debug:
+            print(f"    [Attempt {attempt}] Raw response length: {len(raw[0]) if raw else 0}")
+            if raw and raw[0].strip():
+                preview = raw[0][:200].replace('\n', ' ')
+                print(f"    [Attempt {attempt}] Preview: {preview}...")
+        
         if not raw or not raw[0].strip():
             failure_history.append("empty")
+            if debug:
+                print(f"    [Attempt {attempt}] FAIL: empty response")
             continue
         
         completion = extract_code(raw[0])
         if not completion:
             failure_history.append("extraction")
+            if debug:
+                print(f"    [Attempt {attempt}] FAIL: code extraction failed")
+                print(f"    Raw: {raw[0][:300]}")
             continue
+        
+        if debug:
+            code_preview = completion[:150].replace('\n', ' ')
+            print(f"    [Attempt {attempt}] Extracted: {code_preview}...")
         
         best_code = completion
         test_result = run_test(problem, completion)
+        
+        if debug and not test_result["passed"]:
+            err = test_result.get("error", "unknown")
+            err_preview = err[:200].replace('\n', ' ') if err else ""
+            print(f"    [Attempt {attempt}] TEST ERROR: {err_preview}")
         
         if test_result["passed"]:
             # SUCCESS! Learn from this solution
@@ -188,6 +208,9 @@ def solve_problem(problem: Dict, synapse: LMStudioClient, cg: ContractGraph,
         else:
             failure_history.append(test_result["error"])
     
+    if debug:
+        print(f"    All {n_candidates} attempts failed. History: {failure_history}")
+    
     return {
         "task_id": task_id,
         "passed": False,
@@ -198,13 +221,20 @@ def solve_problem(problem: Dict, synapse: LMStudioClient, cg: ContractGraph,
 
 
 def run_benchmark(problems: List[Dict], synapse: LMStudioClient,
-                  cg: ContractGraph, n_candidates: int = 3) -> List[Dict]:
+                  cg: ContractGraph, n_candidates: int = 3, debug: bool = False) -> List[Dict]:
     """Run full benchmark with Contract Graph learning."""
     results = []
     total = len(problems)
     
     print(f"\n[RUNNING] MBPP with Contract Graph - {total} problems...")
     print("-" * 60)
+    
+    if debug and problems:
+        p0 = problems[0]
+        print("\n[DEBUG] First problem details:")
+        print(f"  Text: {p0['text'][:200]}...")
+        print(f"  Tests: {p0['test_list']}")
+        print()
     
     for i, problem in enumerate(problems, 1):
         task_id = problem["task_id"]
@@ -213,7 +243,7 @@ def run_benchmark(problems: List[Dict], synapse: LMStudioClient,
         n_contracts = len(cg.nodes)
         print(f"\n[{i}/{total}] {task_id} | Graph has {n_contracts} contracts")
         
-        result = solve_problem(problem, synapse, cg, n_candidates=n_candidates, learn=True)
+        result = solve_problem(problem, synapse, cg, n_candidates=n_candidates, learn=True, debug=debug)
         results.append(result)
         
         status = "PASS" if result["passed"] else "FAIL"
@@ -270,6 +300,8 @@ def main():
     parser.add_argument("--k", type=int, default=3,
                         help="Number of attempts per problem")
     parser.add_argument("--output", type=str, default="mbpp_cg_results.json")
+    parser.add_argument("--debug", action="store_true",
+                        help="Print detailed per-attempt diagnostics")
     args = parser.parse_args()
     
     print("=" * 70)
@@ -308,7 +340,7 @@ def main():
     print(f"\n[INIT] Contract Graph is empty: {len(cg.nodes)} contracts")
     
     # Run benchmark
-    results = run_benchmark(problems, synapse, cg, n_candidates=args.k)
+    results = run_benchmark(problems, synapse, cg, n_candidates=args.k, debug=args.debug)
     
     # Analysis
     print_sliding_window(results, window=50)
