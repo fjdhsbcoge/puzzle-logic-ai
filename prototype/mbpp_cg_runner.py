@@ -155,7 +155,7 @@ def solve_problem(problem: Dict, synapse: LMStudioClient, cg: ContractGraph,
         else:
             attempt_prompt = prompt
         
-        raw = synapse.generate(prompt=attempt_prompt, temperature=0.3, max_tokens=1024, n=1)
+        raw = synapse.generate(prompt=attempt_prompt, temperature=0.3, max_tokens=512, n=1)
         
         if debug:
             print(f"    [Attempt {attempt}] Raw response length: {len(raw[0]) if raw else 0}")
@@ -302,6 +302,8 @@ def main():
     parser.add_argument("--output", type=str, default="mbpp_cg_results.json")
     parser.add_argument("--debug", action="store_true",
                         help="Print detailed per-attempt diagnostics")
+    parser.add_argument("--model", type=str, default="deepseek-r1-distill-qwen-7b",
+                        help="LM Studio model ID to use")
     args = parser.parse_args()
     
     print("=" * 70)
@@ -325,8 +327,8 @@ def main():
         print(f"Limited to first {len(problems)} problems")
     
     # Setup
-    synapse = LMStudioClient()
-    print("\n[CHECK] LM Studio...")
+    synapse = LMStudioClient(model=args.model)
+    print(f"\n[CHECK] LM Studio (model={args.model})...")
     if not synapse.check_health():
         print("  NOT RUNNING")
         sys.exit(1)
