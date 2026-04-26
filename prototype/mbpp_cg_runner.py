@@ -81,49 +81,48 @@ def load_mbpp() -> List[Dict[str, Any]]:
 
 
 def extract_code(text: str) -> str:
-    """Extract code from model response, handling reasoning + code mixes."""
+    """Extract code from model response.
+    
+    R1 reasoning models output reasoning first, then code at the END.
+    We search backward from the end of the text to find the actual code.
+    """
     if not text:
         return ""
     
-    # 1. Try fenced code block with python tag
-    match = re.search(r"```(?:python)?\n(.*?)```", text, re.DOTALL)
-    if match:
-        return match.group(1).strip()
+    # Strategy 1: Find the LAST fenced code block (R1 puts code at end)
+    # Use finditer to get all matches, then take the last one
+    matches = list(re.finditer(r"```(?:python)?\n(.*?)```", text, re.DOTALL))
+    if matches:
+        return matches[-1].group(1).strip()
     
-    # 2. Try fenced code block at end of text (model may close with just ```)
-    match = re.search(r"```\n?(.*?)```", text, re.DOTALL)
-    if match:
-        return match.group(1).strip()
+    # Strategy 2: Find the LAST occurrence of "def " and extract from there
+    # This handles cases where there's no markdown fence
+    last_def = text.rfind("def ")
+    if last_def != -1:
+        # Extract from def to end, then clean up trailing text
+        candidate = text[last_def:]
+        # Stop at double newline followed by non-indented text (explanation)
+        lines = candidate.split("\n")
+        code_lines = []
+        for line in lines:
+            stripped = line.strip()
+            if not stripped:
+                continue  # Skip blank lines in code
+            code_lines.append(line)
+            # Heuristic: if we see a line that looks like explanation (starts with capital, not code)
+            if stripped[0].isupper() and not stripped.startswith(("def ", "return", "if ", "for ", "while ", "try", "with ", "class ", "import ", "from ")):
+                # Check if next line is also non-code
+                break
+        if code_lines:
+            return "\n".join(code_lines).strip()
     
-    # 3. Try to find "def " and extract from there to end or next paragraph break
-    def_match = re.search(r"\n?(def\s+\w+\s*\([^)]*\)\s*:[\s\S]*?)(?=\n\n[A-Z]|\n\n[A-Za-z]+\s+|$)", text)
-    if def_match:
-        return def_match.group(1).strip()
-    
-    # 4. Fallback: look for any line starting with def / return / for / if / import
-    code_lines = []
-    started = False
+    # Strategy 3: Look for any line that starts with def/import/class
     for line in text.split("\n"):
         stripped = line.strip()
-        if not started:
-            if stripped.startswith(("def ", "import ", "from ", "class ")):
-                started = True
-                code_lines.append(line)
-        else:
-            # Continue until we hit a blank line followed by non-code text
-            if stripped == "":
-                # Check if next non-empty line is code-like
-                continue
-            if stripped.startswith(("def ", "import ", "from ", "class ", "return", "if ", "for ", "while ", "try:", "with ")):
-                code_lines.append(line)
-            elif not stripped.startswith(("#", " ", "\t")) and code_lines:
-                # Non-indented, non-comment, non-keyword line after code = end
-                break
-            else:
-                code_lines.append(line)
-    
-    if code_lines:
-        return "\n".join(code_lines).strip()
+        if stripped.startswith(("def ", "import ", "from ", "class ")):
+            # Extract from here to end
+            idx = text.find(line)
+            return text[idx:].strip()
     
     return ""
 
@@ -158,8 +157,8 @@ def build_prompt(problem: Dict, contract_hint: str = "") -> str:
     base = problem["text"]
     instruction = (
         "\n\nWrite a Python function to solve this. "
-        "Output only the function code inside a markdown code block. "
-        "Do not include explanations outside the code block."
+        "Put the complete function inside a markdown code block at the very end of your response. "
+        "Do NOT write explanation after the code block."
     )
     if contract_hint:
         return contract_hint + "\n\nNow solve this problem:\n\n" + base + instruction
@@ -192,13 +191,15 @@ def solve_problem(problem: Dict, synapse: LMStudioClient, cg: ContractGraph,
         else:
             attempt_prompt = prompt
         
-        raw = synapse.generate(prompt=attempt_prompt, temperature=0.3, max_tokens=1024, n=1)
+        raw = synapse.generate(prompt=attempt_prompt, temperature=0.3, max_tokens=args.max_tokens, n=1)
         
         if debug:
             print(f"    [Attempt {attempt}] Raw response length: {len(raw[0]) if raw else 0}")
             if raw and raw[0].strip():
-                preview = raw[0][:200].replace('\n', ' ')
-                print(f"    [Attempt {attempt}] Preview: {preview}...")
+                preview = raw[0][:150].replace('\n', '\\n')
+                end_preview = raw[0][-300:].replace('\n', '\\n')
+                print(f"    [Attempt {attempt}] Start: {preview}...")
+                print(f"    [Attempt {attempt}] End: ...{end_preview}")
         
         if not raw or not raw[0].strip():
             failure_history.append("empty")
@@ -211,12 +212,15 @@ def solve_problem(problem: Dict, synapse: LMStudioClient, cg: ContractGraph,
             failure_history.append("extraction")
             if debug:
                 print(f"    [Attempt {attempt}] FAIL: code extraction failed")
-                print(f"    Raw: {raw[0][:300]}")
+                print(f"    Contains 'def ': {'def ' in raw[0]}")
+                print(f"    Contains '```': {'```' in raw[0]}")
             continue
         
         if debug:
-            code_preview = completion[:150].replace('\n', ' ')
-            print(f"    [Attempt {attempt}] Extracted: {code_preview}...")
+            code_preview = completion[:200].replace('\n', '\\n')
+            print(f"    [Attempt {attempt}] Extracted ({len(completion)} chars): {code_preview}...")
+            if "def " in completion:
+                print(f"    [Attempt {attempt}] OK: contains 'def '")
         
         best_code = completion
         test_result = run_test(problem, completion)
@@ -341,6 +345,8 @@ def main():
                         help="Print detailed per-attempt diagnostics")
     parser.add_argument("--model", type=str, default="deepseek-r1-distill-qwen-7b",
                         help="LM Studio model ID to use")
+    parser.add_argument("--max-tokens", type=int, default=2048,
+                        help="Max tokens per generation (R1 needs 2048+ for reasoning+code)")
     args = parser.parse_args()
     
     print("=" * 70)
