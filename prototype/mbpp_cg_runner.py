@@ -349,6 +349,8 @@ def main():
                         help="LM Studio model ID to use")
     parser.add_argument("--max-tokens", type=int, default=2048,
                         help="Max tokens per generation (R1 needs 2048+ for reasoning+code)")
+    parser.add_argument("--timeout", type=int, default=600,
+                        help="HTTP timeout in seconds (default 600 = 10 minutes)")
     args = parser.parse_args()
     
     print("=" * 70)
@@ -372,8 +374,8 @@ def main():
         print(f"Limited to first {len(problems)} problems")
     
     # Setup
-    synapse = LMStudioClient(model=args.model)
-    print(f"\n[CHECK] LM Studio (model={args.model})...")
+    synapse = LMStudioClient(model=args.model, timeout=args.timeout)
+    print(f"\n[CHECK] LM Studio (model={args.model}, timeout={args.timeout}s)...")
     if not synapse.check_health():
         print("  NOT RUNNING")
         sys.exit(1)
