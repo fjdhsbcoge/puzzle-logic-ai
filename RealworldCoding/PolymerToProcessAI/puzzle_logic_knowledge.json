@@ -1,0 +1,14 @@
+{
+  "patterns": [
+    {
+      "error_type": "SyntaxError",
+      "error_signature": "unterminated string literal (detected at line 1)",
+      "fix_strategy": "Syntax error. Check for missing colons, mismatched parentheses, or bad indentation.",
+      "confidence": 0.9025,
+      "context": "Thank you for providing such a detailed description of Ideenschmiede's vision and core principles. Here is a clean and correct Python code snippet that represents the structure of the website based on",
+      "times_seen": 3,
+      "times_fixed": 0,
+      "timestamp": "2026-04-27T12:41:53.025075"
+    }
+  ]
+}

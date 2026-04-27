@@ -1,139 +1,128 @@
-# Puzzle Logic AI
+# Puzzle Logic Agent v2.0
 
-**A fundamentally different approach to AI reasoning.**
+**Empirical constraint satisfaction for coding.**
 
-Traditional AI agents are statistical pattern matchers with no structural understanding of correctness. Puzzle Logic AI treats knowledge as a jigsaw puzzle: empirical observations are pieces, and hard constraints are the assembly rules. A claim is accepted only if it fits structurally — never because it "sounds plausible."
-
-This repository contains both the **conceptual framework** and a **working prototype** demonstrating the approach on coding tasks.
+The agent generates code, executes it, catches errors, queries a learned knowledge graph for fix patterns, retries with hints, and records validated solutions — so it gets smarter over time.
 
 ---
 
-## Core Idea
+## Recommended: Open WebUI + Puzzle Logic Pipeline
 
-| Traditional AI | Puzzle Logic AI |
-|---------------|-----------------|
-| Pattern matching | Constraint satisfaction |
-| "Probable" = true | "Fits" = true |
-| Confidence scores | Structural tension |
-| Monolithic model | Synapse (LLM) + OS (constraints) |
+The best experience is using **Open WebUI** (a free, open-source chat interface) with our **Puzzle Logic Pipeline** plugin. This gives you:
 
-The entire epistemic stance is controlled by one parameter: **Omega** — openness to being proved wrong. High Omega (novice) explores wildly. Low Omega (expert) only accepts what structurally fits.
+- **Conversation memory** (remembers context across messages)
+- **Drag & drop file upload** (multiple files, any code format)
+- **Beautiful dark UI** with markdown, code highlighting, streaming
+- **Auto-execution**: code runs in sandbox, errors caught, knowledge graph consulted
+- **Works with LM Studio or Ollama** (any OpenAI-compatible backend)
 
----
+### Quick Start
 
-## What This Repo Contains
-
-| Directory | Purpose |
-|-----------|---------|
-| `docs/` | Concept papers, architecture, references |
-| `prototype/` | Research code — experiments, benchmarks, diagnostics |
-| `product/` | **v1.0 CLI tool** — download and use immediately |
-
----
-
-## Benchmark Results
-
-### HumanEval (164 coding problems)
-
-| Model | Baseline (pass@3) | + Puzzle Logic OS | Delta |
-|-------|------------------|-------------------|-------|
-| Qwen2.5-Coder-3B | 91.5% (150/164) | **98.2% (161/164)** | **+6.7 pp** |
-
-- **11 problems** fixed by the Error-Pattern Graph
-- **0 regressions** — never hurt a problem that already passed
-- **Toolbox success rate**: 82% (14/17 times it helped)
-
-### HumanEval+ (harder — 80× more tests per problem)
-
-Run in progress. Expected baseline: ~55%, target with OS: ~65%.
-
-See [RESULTS.md](RESULTS.md) for full methodology and analysis.
-
----
-
-## Quick Start (5 Minutes)
-
-### Prerequisites
-- Python 3.10+
-- [LM Studio](https://lmstudio.ai) with a model loaded (e.g., Qwen2.5-Coder-3B-Instruct)
-
-### Install
 ```bash
-git clone https://github.com/fjdhsbcoge/puzzle-logic-ai.git
-cd puzzle-logic-ai/product
-pip install requests
+# 1. Install Open WebUI (requires Python 3.11+)
+pip install open-webui
+
+# 2. Start your LLM backend FIRST
+#    LM Studio: Load model, Developer tab -> Start Server (port 1234)
+#    Ollama: ollama serve (port 11434)
+
+# 3. Start Open WebUI
+open-webui serve
+
+# 4. Open browser to http://localhost:8080
+#    - Sign in (create any account, it's local-only)
+#    - Go to Settings -> Admin Panel -> Settings -> Connections
+#    - Add OpenAI API connection: http://localhost:1234/v1 (for LM Studio)
+#    - Or: http://localhost:11434/v1 (for Ollama)
+
+# 5. Copy the Pipeline file to Open WebUI's pipelines folder
+mkdir -p ~/.config/open-webui/pipelines
+cp pipeline/puzzle_logic_pipeline.py ~/.config/open-webui/pipelines/
+cp product/puzzle_logic_agent.py ~/.config/open-webui/pipelines/
+
+# 6. In Open WebUI chat, select "Puzzle Logic" from the model dropdown
+#    Drag a .py file into the chat, type "fix this", send
 ```
 
-### Use It
+---
+
+## Alternative: Standalone Web UI
+
+If you prefer not to install Open WebUI, use our built-in web server.
+Conversation memory is limited (saves to browser localStorage only).
+
 ```bash
-python puzzle_logic_agent.py my_script.py --model qwen2.5-coder-3b-instruct
+python product/puzzle_logic_server.py
+# Open browser to http://localhost:8080
 ```
 
-What happens:
-1. Sends your script to the local LLM
-2. Runs it
-3. If it fails → searches error history → suggests fixes
-4. If it passes → remembers the solution pattern for next time
+---
+
+## Alternative: Command Line
+
+```bash
+# Generate code
+python product/puzzle_logic_agent.py --generate "Write a function..."
+
+# Fix a file with tests
+python product/puzzle_logic_agent.py broken.py --test test_broken.py --attempts 3
+
+# See knowledge graph stats
+python product/puzzle_logic_agent.py --stats
+```
+
+---
+
+## How It Works
+
+```
+  GENERATE ----> EXECUTE ----> PASS? --YES--> LEARN (record fix)
+                    |
+                   NO
+                    v
+             CATCH ERROR
+                    |
+                    v
+         QUERY KNOWLEDGE GRAPH
+         "Seen this error before?"
+                    |
+                    v
+          RETRIEVE FIX TOOLBOX
+     (past patterns as options, not directives)
+                    |
+                    v
+               RETRY + HINT
+                    |
+                    v
+                 PASS? --YES--> LEARN
+```
+
+---
+
+## File Management
+
+All interfaces support loading and unloading code files:
+
+| Action | How |
+|--------|-----|
+| Attach file(s) | Drag & drop, or click paperclip |
+| Remove one file | Click the X on the file pill |
+| Remove all files | Click "Clear all" |
+| Preview contents | Open file preview panel |
+
+### Supported Formats
+
+Python, JavaScript, TypeScript, C, C++, Java, Go, Rust, Swift, Kotlin, Ruby, PHP, HTML, CSS, JSON, YAML, SQL, Shell, Markdown, Text, CSV
 
 ---
 
 ## Architecture
 
-```
-┌──────────────┐     ┌─────────────────────┐     ┌──────────────┐
-│   Synapse    │────▶│   Puzzle Logic OS   │────▶│   Output     │
-│   (LLM)      │     │                     │     │              │
-│  Generates   │     │  1. Empirical test  │     │  Pass/fail   │
-│  candidates  │     │  2. Error extraction │     │  + learned   │
-│              │     │  3. Pattern match   │     │  patterns    │
-└──────────────┘     │  4. Structural fit  │     └──────────────┘
-                     │  5. Accept/reject   │
-                     └─────────────────────┘
-                              │
-                              ▼
-                     ┌─────────────────────┐
-                     │   Error-Pattern     │
-                     │   Knowledge Graph     │
-                     │  (persists across     │
-                     │   sessions)           │
-                     └─────────────────────┘
-```
-
-The OS layer is model-agnostic. It works with any local LLM: Qwen, DeepSeek, Llama, Mistral.
-
----
-
-## Key Concepts
-
-- **[CONCEPT.md](docs/CONCEPT.md)** — The epistemology: knowledge as structural assembly
-- **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** — Synapse × OS × Omega design
-- **[OMEGA_PARAMETER.md](docs/OMEGA_PARAMETER.md)** — The single parameter controlling belief
-- **[REFERENCES.md](docs/REFERENCES.md)** — Free Energy Principle, precision weighting, constraint programming
-
----
-
-## Contributing
-
-This is early research. We need:
-- More benchmark results (other models, other domains)
-- Better error-pattern extraction (currently hardcoded strategies)
-- A VS Code extension (prototype CLI exists)
-- Causal error analysis (why did this fix work?)
-
-Open an issue or PR. See [ROADMAP.md](docs/ROADMAP.md) for planned work.
-
----
-
-## Citation
-
-```bibtex
-@misc{puzzlelogic2025,
-  title={Puzzle Logic AI: Constraint-Satisfaction Reasoning for Local LLM Agents},
-  author={[Your name]},
-  year={2025},
-  howpublished={\url{https://github.com/fjdhsbcoge/puzzle-logic-ai}}
-}
-```
+- **Synapse** (LLM): LM Studio or Ollama — generates code
+- **OS** (`ErrorPatternGraph`): Validates against compiler output
+- **Sandbox** (`execute_code`): Subprocess execution with timeout
+- **Toolbox** (`get_fix_toolbox`): Patterns as options, not directives
+- **Pipeline** (Open WebUI): Intercepts requests, runs loop, formats results
 
 ---
 
