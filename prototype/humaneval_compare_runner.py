@@ -30,7 +30,8 @@ from error_pattern_kg import ErrorPatternGraph, extract_error_fingerprint
 from prompt_logger import PromptLogger
 
 
-HUMANEVAL_PATH = os.path.join(os.path.dirname(__file__), "HumanEvalPlus-OriginFmt.jsonl")
+HUMANEVAL_PATH = os.path.join(os.path.dirname(__file__), "HumanEval.jsonl")
+
 
 def load_humaneval() -> List[Dict]:
     problems = []
