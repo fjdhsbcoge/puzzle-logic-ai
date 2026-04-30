@@ -1,0 +1,136 @@
+{
+  "patterns": [
+    {
+      "error_type": "AssertionError",
+      "error_signature": "assert similar_elements((<N>, <N>, <N>, <N>),(<N>, <N>, <N>, <N>)) == (<N>, <N>)",
+      "failing_line": "assert similar_elements((3, 4, 5, 6),(5, 7, 4, 10)) == (4, 5)",
+      "fix_strategy": "Fix:   Changed: def similar_elements(tuple_list1, tuple_list2): -> def similar_elements(tup1, tup2):;   Changed: # Convert each tuple list to a set for efficient lookup -> return tuple(sorted(set(tup1...",
+      "confidence": 0.46399999999999997,
+      "context": "def similar_elements(tuple_list1, tuple_list2):; # Convert each tuple list to a set for efficient lookup; set1 = set(tuple_list1); set2 = set(tuple_list2); # Find the intersection of both sets; common",
+      "times_seen": 80,
+      "times_fixed": 17,
+      "locality": 0.41935424804687504,
+      "timestamp": "2026-04-30T12:16:20.653913"
+    },
+    {
+      "error_type": "NameError",
+      "error_signature": "name '<name>' is not defined",
+      "failing_line": "assert remove_dirty_chars(\"probasscurve\", \"pros\") == 'bacuve'",
+      "fix_strategy": "Fix:   Changed: def str_to_list(str1, str2): -> def str_to_list(s):;   Changed: return ''.join([char for char in str1 if char not in str2]) -> return list(s);   Added: def remove_dirty_chars(str1, str...",
+      "confidence": 0.4,
+      "context": "def str_to_list(str1, str2):; return ''.join([char for char in str1 if char not in str2])",
+      "times_seen": 25,
+      "times_fixed": 2,
+      "locality": 0.8,
+      "timestamp": "2026-04-30T12:17:58.094026"
+    },
+    {
+      "error_type": "AssertionError",
+      "error_signature": "assert multiples_of_num(<N>,<N>)== [<N>,<N>,<N>,<N>]",
+      "failing_line": "assert multiples_of_num(4,3)== [3,6,9,12]",
+      "fix_strategy": "Fix:   Changed: def multiples_of_num(n, m): -> def multiples_of_num(m, n):",
+      "confidence": 0.4,
+      "context": "def multiples_of_num(n, m):; return [n * i for i in range(1, m + 1)]",
+      "times_seen": 1,
+      "times_fixed": 1,
+      "locality": 0.6,
+      "timestamp": "2026-04-30T12:18:21.096531"
+    },
+    {
+      "error_type": "TypeError",
+      "error_signature": "int() can't convert non-string with explicit base",
+      "failing_line": "assert binary_to_decimal(100) == 4",
+      "fix_strategy": "Fix:   Changed: return int(binary, 2) -> return int(str(binary), 2)",
+      "confidence": 0.4,
+      "context": "def binary_to_decimal(binary):; return int(binary, 2)",
+      "times_seen": 1,
+      "times_fixed": 1,
+      "locality": 0.9,
+      "timestamp": "2026-04-30T12:18:31.918275"
+    },
+    {
+      "error_type": "TypeError",
+      "error_signature": "find_missing() takes <N> positional argument but <N> were given",
+      "failing_line": "assert find_missing([1,2,3,5],4) == 4",
+      "fix_strategy": "Fix:   Changed: def find_missing(arr): -> def find_missing(arr, n):;   Changed: left, right = 0, len(arr) - 1 -> left, right = 0, n - 1;   Changed: # Check if the missing number is on the left half ->...",
+      "confidence": 0.52,
+      "context": "def find_missing(arr):; left, right = 0, len(arr) - 1; while left <= right:; mid = (left + right) // 2; # Check if the missing number is on the left half; if arr[mid] != mid + arr[0]:; right = mid - 1",
+      "times_seen": 56,
+      "times_fixed": 4,
+      "locality": 0.7,
+      "timestamp": "2026-04-30T12:20:09.126497"
+    },
+    {
+      "error_type": "Other",
+      "error_signature": "",
+      "failing_line": "assert recursive_list_sum(([1, 2, [3,4],[5,6]]))==21",
+      "fix_strategy": "Fix:   Changed: else: -> elif isinstance(lst[0], list):;   Changed: return lst[0] + recursive_list_sum(lst[1:]) -> return recursive_list_sum(lst[0]) + recursive_list_sum(lst[1:]);   Added: else:",
+      "confidence": 0.5,
+      "context": "def recursive_list_sum(lst):; if not lst:; return 0; else:; return lst[0] + recursive_list_sum(lst[1:])",
+      "times_seen": 9,
+      "times_fixed": 4,
+      "locality": 0.7000000000000001,
+      "timestamp": "2026-04-30T12:23:47.579444"
+    },
+    {
+      "error_type": "AssertionError",
+      "error_signature": "assert comb_sort([<N>, <N>, <N>, <N>, <N>]) == [<N>, <N>, <N>, <N>, <N>]",
+      "failing_line": "assert comb_sort([5, 15, 37, 25, 79]) == [5, 15, 25, 37, 79]",
+      "fix_strategy": "Fix:   Changed: # Update the gap value for a next comb -> # Update the gap value for this pass;   Changed: sorted = True  # If gap is 1, we do one last check for any possible swaps -> sorted = True  #...",
+      "confidence": 0.4207379850182421,
+      "context": "def comb_sort(arr):; gap = len(arr); shrink_factor = 1.3; sorted = False; while not sorted:; # Update the gap value for a next comb; gap = int(gap / shrink_factor); if gap <= 1:; gap = 1; sorted = Tru",
+      "times_seen": 4,
+      "times_fixed": 1,
+      "locality": 0.4,
+      "timestamp": "2026-04-30T12:24:48.765447"
+    },
+    {
+      "error_type": "AssertionError",
+      "error_signature": "assert index_minimum([('<name>', <N>), ('<name>', <N>), ('<name>', <N>)]) == '<name>'",
+      "failing_line": "assert index_minimum([('Rash', 143), ('Manjeet', 200), ('Varsha', 100)]) == 'Varsha'",
+      "fix_strategy": "Fix:   Changed: if not tuples: -> return min(tuples, key=lambda x: x[1])[0];   Removed: return None;   Removed: min_index = 0",
+      "confidence": 0.410927710740297,
+      "context": "def index_minimum(tuples):; if not tuples:; return None; min_index = 0; for i, (value, _) in enumerate(tuples):; if value < tuples[min_index][0]:; min_index = i; return tuples[min_index]",
+      "times_seen": 1,
+      "times_fixed": 1,
+      "locality": 0.4,
+      "timestamp": "2026-04-30T12:26:36.853063"
+    },
+    {
+      "error_type": "AssertionError",
+      "error_signature": "assert list_to_float( [(\"<name>\", \"<name>\"), (\"<name>\", \"<name>\"), (\"<name>\", \"<name>\"), (\"<name>\", \"<name>\")] ) == '[(<...",
+      "failing_line": "assert list_to_float( [(\"3\", \"4\"), (\"1\", \"26.45\"), (\"7.32\", \"8\"), (\"4\", \"8\")] ) == '[(3.0, 4.0), (1.0, 26.45), (7.32, 8.",
+      "fix_strategy": "Fix:   Changed: return [float(item) if isinstance(item, (int, float)) else item for item in lst] -> result = [];   Added: for item in lst:;   Added: new_item = tuple(float(element) if element.replace(...",
+      "confidence": 0.4883922238321887,
+      "context": "def list_to_float(lst):; return [float(item) if isinstance(item, (int, float)) else item for item in lst]",
+      "times_seen": 1,
+      "times_fixed": 1,
+      "locality": 0.4,
+      "timestamp": "2026-04-30T12:28:39.480907"
+    },
+    {
+      "error_type": "AssertionError",
+      "error_signature": "assert max_occurrences([<N>,<N>,<N>,<N>,<N>,<N>,<N>,<N>,<N>,<N>,<N>,<N>,<N>,<N>,<N>,<N>,<N>,<N>,<N>,<N>,<N>])==(<N>, <N>...",
+      "failing_line": "assert max_occurrences([2,3,8,4,7,9,8,2,6,5,1,6,1,2,3,2,4,6,9,1,2])==(2, 5)",
+      "fix_strategy": "Fix:   Changed: counter = Counter(lst) -> count = Counter(lst);   Changed: most_common = counter.most_common(1) -> max_item, max_count = count.most_common(1)[0];   Changed: return most_common[0][0] ->...",
+      "confidence": 0.40861480442107406,
+      "context": "from collections import Counter; def max_occurrences(lst):; if not lst:; return None; counter = Counter(lst); most_common = counter.most_common(1); return most_common[0][0]",
+      "times_seen": 1,
+      "times_fixed": 1,
+      "locality": 0.4,
+      "timestamp": "2026-04-30T12:30:19.831135"
+    },
+    {
+      "error_type": "AssertionError",
+      "error_signature": "assert encode_list([<N>,<N>,<N>,<N>,<N>,<N>.<N>,<N>,<N>])==[[<N>, <N>], [<N>, <N>], [<N>, <N>], [<N>, <N>], [<N>, <N>.<N...",
+      "failing_line": "assert encode_list([1,1,2,3,4,4.3,5,1])==[[2, 1], [1, 2], [1, 3], [1, 4], [1, 4.3], [1, 5], [1, 1]]",
+      "fix_strategy": "Fix:   Changed: from itertools import groupby -> def encode_list(lst):;   Changed: def encode_list(lst): -> if not lst:;   Changed: return [(len(list(group)), key) for key, group in groupby(lst)] -> r...",
+      "confidence": 0.4841650833864169,
+      "context": "from itertools import groupby; def encode_list(lst):; return [(len(list(group)), key) for key, group in groupby(lst)]",
+      "times_seen": 1,
+      "times_fixed": 1,
+      "locality": 0.4,
+      "timestamp": "2026-04-30T12:34:52.554854"
+    }
+  ]
+}

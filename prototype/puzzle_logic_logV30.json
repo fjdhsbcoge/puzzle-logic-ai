@@ -1,0 +1,935 @@
+{
+  "model": "qwen2.5-coder-7b-instruct",
+  "n_problems": 40,
+  "timestamp": "20260430_094005",
+  "omega": 0.8735145203514495,
+  "baseline_results": [
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def is_not_prime(n):\n    if n <= 1:\n        return True\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return True\n    return False",
+      "error": null,
+      "task_id": "MBPP/3"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "import heapq\n\ndef heap_queue_largest(numbers, n):\n    \"\"\"\n    Find the n largest integers from a given list of numbers using the heap queue algorithm.\n\n    :param numbers: List of integers.\n    :param n: Number of largest integers to find.\n    :return: A list containing the n largest integers.\n    \"\"\"\n    return heapq.nlargest(n, numbers)",
+      "error": null,
+      "task_id": "MBPP/4"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def similar_elements(tuple_list1, tuple_list2):\n    # Convert each tuple list to a set for efficient lookup\n    set1 = set(tuple_list1)\n    set2 = set(tuple_list2)\n    \n    # Find the intersection of both sets\n    common_elements = set1.intersection(set2)\n    \n    return common_elements",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmpvni6n1v0.py\", line 10, in <module>\n    assert similar_elements((3, 4, 5, 6),(5, 7, 4, 10)) == (4, 5)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "task_id": "MBPP/2"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "import re\n\ndef find_char_long(text):\n    return re.findall(r'\\b\\w{4,}\\b', text)",
+      "error": null,
+      "task_id": "MBPP/7"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def is_Power_Of_Two(n):\n    return n > 0 and (n & (n - 1)) == 0",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmphjmfevgc.py\", line 3, in <module>\n    assert differ_At_One_Bit_Pos(13,9) == True\n           ^^^^^^^^^^^^^^^^^^^^^\nNameError: name 'differ_At_One_Bit_Pos' is not defined\n",
+      "task_id": "MBPP/6"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def square_nums(nums):\n    return list(map(lambda x: x ** 2, nums))",
+      "error": null,
+      "task_id": "MBPP/8"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def count_ways(n):\n    if n == 0:\n        return 1\n    elif n == 1:\n        return 1\n    else:\n        a, b = 1, 1\n        for i in range(2, n + 1):\n            a, b = b, a + b\n        return b",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmpful8q589.py\", line 11, in <module>\n    assert count_ways(2) == 3\n           ^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "task_id": "MBPP/5"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def small_nnum(data, n):\n    \"\"\"\n    Returns the n smallest items from the given dataset.\n    \n    Parameters:\n    data (list): The list of numerical values from which to find the smallest items.\n    n (int): The number of smallest items to return.\n    \n    Returns:\n    list: A list containing the n smallest items from the dataset.\n    \"\"\"\n    if n <= 0:\n        raise ValueError(\"n must be a positive integer\")\n    if not data or len(data) < n:\n        raise ValueError(\"Dataset is too small for the requested number of items\")\n    \n    return sorted(data)[:n]",
+      "error": null,
+      "task_id": "MBPP/10"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def find_Rotations(s):\n    n = len(s)\n    for i in range(1, n):\n        if s[i:] + s[:i] == s:\n            return i\n    return 0",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmpt35lit3k.py\", line 8, in <module>\n    assert find_Rotations(\"ab\") == 2\n           ^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "task_id": "MBPP/9"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def remove_Occ(s, char):\n    # Find the index of the first occurrence of the character\n    first_index = s.find(char)\n    \n    # If the character is not found, return the original string\n    if first_index == -1:\n        return s\n    \n    # Remove the first occurrence by slicing the string\n    s = s[:first_index] + s[first_index+1:]\n    \n    # Find the index of the last occurrence of the character\n    last_index = s.rfind(char)\n    \n    # If the character is not found, return the modified string so far\n    if last_index == -1:\n        return s\n    \n    # Remove the last occurrence by slicing the string\n    s = s[:last_index] + s[last_index+1:]\n    \n    return s",
+      "error": null,
+      "task_id": "MBPP/11"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def sort_matrix(matrix):\n    return sorted(matrix, key=lambda row: sum(row))",
+      "error": null,
+      "task_id": "MBPP/12"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "import re\n\ndef split_lowerstring(s):\n    return re.findall('[a-z][^a-z]*', s)",
+      "error": null,
+      "task_id": "MBPP/15"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def find_Volume(base, height, length):\n    \"\"\"\n    Calculate the volume of a triangular prism.\n    \n    Parameters:\n    base (float): The base length of the triangular face.\n    height (float): The height of the triangular face.\n    length (float): The length of the prism.\n    \n    Returns:\n    float: The volume of the triangular prism.\n    \"\"\"\n    return 0.5 * base * height * length",
+      "error": null,
+      "task_id": "MBPP/14"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def min_cost(cost):\n    m = len(cost)\n    n = len(cost[0])\n    \n    # Create a 2D array to store the minimum cost to reach each cell\n    dp = [[0 for _ in range(n)] for _ in range(m)]\n    \n    # Initialize the top-left corner of dp array with the same value as the top-left corner of cost array\n    dp[0][0] = cost[0][0]\n    \n    # Fill the first row of dp array\n    for j in range(1, n):\n        dp[0][j] = dp[0][j-1] + cost[0][j]\n    \n    # Fill the first column of dp array\n    for i in range(1, m):\n        dp[i][0] = dp[i-1][0] + cost[i][0]\n    \n    # Fill the rest of the dp array\n    for i in range(1, m):\n        for j in range(1, n):\n            dp[i][j] = min(dp[i-1][j], dp[i][j-1]) + cost[i][j]\n    \n    # The minimum cost to reach (m-1, n-1) is stored in dp[m-1][n-1]\n    return dp[m-1][n-1]",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmp8omalo1a.py\", line 26, in <module>\n    assert min_cost([[1, 2, 3], [4, 8, 2], [1, 5, 3]], 2, 2) == 8\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: min_cost() takes 1 positional argument but 3 were given\n",
+      "task_id": "MBPP/1"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def square_perimeter(side_length):\n    return 4 * side_length",
+      "error": null,
+      "task_id": "MBPP/17"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def test_duplicate(arr):\n    seen = set()\n    for num in arr:\n        if num in seen:\n            return True\n        seen.add(num)\n    return False",
+      "error": null,
+      "task_id": "MBPP/19"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "from collections import Counter\n\ndef count_common(word_dict):\n    \"\"\"\n    Counts the most common words in a given dictionary.\n    \n    Parameters:\n    word_dict (dict): A dictionary where keys are words and values are their counts.\n    \n    Returns:\n    list: A list of tuples containing the most common words and their counts.\n    \"\"\"\n    # Flatten the dictionary to get a list of all words\n    all_words = [word for word, count in word_dict.items() for _ in range(count)]\n    \n    # Count the occurrences of each word\n    word_counts = Counter(all_words)\n    \n    # Get the most common words\n    most_common_words = word_counts.most_common()\n    \n    return most_common_words",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmpj2dhb2gc.py\", line 23, in <module>\n    assert count_common(['red','green','black','pink','black','white','black','eyes','white','black','orange','pink','pink','red','red','white','orange','white',\"black\",'pink','green','green','pink','green','pink','white','orange',\"orange\",'red']) == [('pink', 6), ('black', 5), ('white', 5), ('red', 4)]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^...",
+      "task_id": "MBPP/13"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "import re\n\ndef text_lowercase_underscore(text):\n    pattern = r'[a-z]+_[a-z]+'\n    return bool(re.search(pattern, text))",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmpilz6llng.py\", line 6, in <module>\n    assert text_lowercase_underscore(\"aab_cbbbc\")==('Found a match!')\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "task_id": "MBPP/16"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def str_to_list(str1, str2):\n    return ''.join([char for char in str1 if char not in str2])",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmpbw25elm6.py\", line 3, in <module>\n    assert remove_dirty_chars(\"probasscurve\", \"pros\") == 'bacuve'\n           ^^^^^^^^^^^^^^^^^^\nNameError: name 'remove_dirty_chars' is not defined\n",
+      "task_id": "MBPP/18"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def multiples_of_num(m, n):\n    return [i for i in range(n, (m+1)*n, n)]",
+      "error": null,
+      "task_id": "MBPP/21"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def find_first_duplicate(nums):\n    seen = set()\n    for num in nums:\n        if num in seen:\n            return num\n        seen.add(num)\n    return -1",
+      "error": null,
+      "task_id": "MBPP/22"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def maximum_Sum(list_of_lists):\n    return max(sum(sublist) for sublist in list_of_lists)",
+      "error": null,
+      "task_id": "MBPP/23"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def binary_to_decimal(binary):\n    return int(binary, 2)",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmpj35lar2j.py\", line 3, in <module>\n    assert binary_to_decimal(100) == 4\n           ^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmpj35lar2j.py\", line 2, in binary_to_decimal\n    return int(binary, 2)\n           ^^^^^^^^^^^^^^\nTypeError: int() can't convert non-string with explicit base\n",
+      "task_id": "MBPP/24"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "import re\n\ndef remove(strings):\n    return [re.sub(r'\\d', '', s) for s in strings]",
+      "error": null,
+      "task_id": "MBPP/27"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def is_woodall(n):\n    if n < 2:\n        return False\n    k = 0\n    while (n + 1) % (k + 1) == 0 and (n + 1) // (k + 1) == 2 ** k:\n        k += 1\n    return k > 0",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmp75oaptcr.py\", line 8, in <module>\n    assert is_woodall(383) == True\n           ^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "task_id": "MBPP/20"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def find_Product(arr):\n    from collections import Counter\n    count = Counter(arr)\n    product = 1\n    for num, freq in count.items():\n        if freq == 1:\n            product *= num\n    return product",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmponn9z67w.py\", line 9, in <module>\n    assert find_Product([1,1,2,3],4) == 6\n           ^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: find_Product() takes 1 positional argument but 2 were given\n",
+      "task_id": "MBPP/25"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def check_k_elements(tuple_list, k):\n    \"\"\"\n    Check if all tuples in the list have exactly k elements.\n\n    Parameters:\n    tuple_list (list of tuples): The list of tuples to check.\n    k (int): The number of elements each tuple should have.\n\n    Returns:\n    bool: True if all tuples have exactly k elements, False otherwise.\n    \"\"\"\n    return all(len(t) == k for t in tuple_list)",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmpp5t21fnp.py\", line 13, in <module>\n    assert check_k_elements([(4, 4), (4, 4, 4), (4, 4), (4, 4, 4, 4), (4, )], 4) == True\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "task_id": "MBPP/26"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def binomial_Coeff(n, k):\n    if k > n:\n        return 0\n    if k == 0 or k == n:\n        return 1\n    return binomial_Coeff(n-1, k-1) + binomial_Coeff(n-1, k)",
+      "error": null,
+      "task_id": "MBPP/28"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def max_Prime_Factors(n):\n    # Initialize the maximum prime factor\n    max_prime = -1\n    \n    # Divide n by 2 to remove all even factors\n    while n % 2 == 0:\n        max_prime = 2\n        n //= 2\n    \n    # n must be odd at this point, so a skip of 2 (i.e., i += 2) can be used\n    for i in range(3, int(n**0.5) + 1, 2):\n        while n % i == 0:\n            max_prime = i\n            n //= i\n    \n    # If n is a prime number greater than 2\n    if n > 2:\n        max_prime = n\n    \n    return max_prime",
+      "error": null,
+      "task_id": "MBPP/32"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def get_Odd_Occurrence(arr):\n    for i in arr:\n        if arr.count(i) % 2 != 0:\n            return i\n    return None",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmp42hz20tu.py\", line 6, in <module>\n    assert get_Odd_Occurrence([1,2,3,1,2,3,1],7) == 1\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: get_Odd_Occurrence() takes 1 positional argument but 2 were given\n",
+      "task_id": "MBPP/29"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def check_Equality(s):\n    n = len(s)\n    count = 0\n    \n    for i in range(n):\n        for j in range(i, n):\n            if s[i] == s[j]:\n                count += 1\n                \n    return count",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmp4g2b7uun.py\", line 11, in <module>\n    assert count_Substring_With_Equal_Ends(\"abc\") == 3\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nNameError: name 'count_Substring_With_Equal_Ends' is not defined\n",
+      "task_id": "MBPP/30"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def find_rect_num(n):\n    return n * (n + 1)",
+      "error": null,
+      "task_id": "MBPP/35"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def find_missing(arr):\n    left, right = 0, len(arr) - 1\n    while left <= right:\n        mid = (left + right) // 2\n        # Check if the missing number is on the left half\n        if arr[mid] != mid + arr[0]:\n            right = mid - 1\n        else:\n            left = mid + 1\n    return left + arr[0]",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmpglmlhx7x.py\", line 11, in <module>\n    assert find_missing([1,2,3,5],4) == 4\n           ^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: find_missing() takes 1 positional argument but 2 were given\n",
+      "task_id": "MBPP/34"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def decimal_To_Binary(decimal_number):\n    if decimal_number == 0:\n        return \"0\"\n    binary_number = \"\"\n    while decimal_number > 0:\n        remainder = decimal_number % 2\n        binary_number = str(remainder) + binary_number\n        decimal_number = decimal_number // 2\n    return binary_number",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmpl0lurv4z.py\", line 10, in <module>\n    assert decimal_To_Binary(10) == 1010\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "task_id": "MBPP/33"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def find_Nth_Digit(numerator, denominator, n):\n    remainder = numerator % denominator\n    count = 0\n    \n    while remainder != 0 and count < n:\n        remainder *= 10\n        digit = remainder // denominator\n        remainder %= denominator\n        count += 1\n        \n        if count == n:\n            return digit\n    \n    return -1  # If the nth digit is not found within the first n digits of the repeating part\n\n# Example usage:\nprint(find_Nth_Digit(1, 3, 1))  # Output: 3 (1/3 = 0.333...)\nprint(find_Nth_Digit(2, 7, 6))  # Output: 8 (2/7 = 0.285714285714...)",
+      "error": null,
+      "task_id": "MBPP/36"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "import heapq\n\ndef func(lists, k):\n    # Create a dictionary to store the frequency of each integer\n    freq_dict = {}\n    \n    # Iterate over each list and update the frequency dictionary\n    for lst in lists:\n        for num in lst:\n            if num in freq_dict:\n                freq_dict[num] += 1\n            else:\n                freq_dict[num] = 1\n    \n    # Use a min heap to keep track of top k elements\n    min_heap = []\n    \n    # Iterate over the frequency dictionary and push elements into the heap\n    for num, freq in freq_dict.items():\n        if len(min_heap) < k:\n            heapq.heappush(min_heap, (freq, num))\n        elif freq > min_heap[0][0]:\n            heapq.heappop(min_heap)\n            heapq.heappush(min_heap, (freq, num))\n    \n    # Extract the numbers from the heap and return them in descending order of frequency\n    top_k = [heapq.heappop(min_heap)[1] for _ in range(len(min_heap))]\n    top_k.reverse()\n    \n    return top_k",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmpqciwio9o.py\", line 31, in <module>\n    assert func([[1, 2, 6], [1, 3, 4, 5, 7, 8], [1, 3, 5, 6, 8, 9], [2, 5, 7, 11], [1, 4, 7, 8, 12]],3)==[5, 7, 1]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "task_id": "MBPP/31"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def sort_mixed_list(mixed_list):\n    # Separate integers and strings into two lists\n    int_part = [item for item in mixed_list if isinstance(item, int)]\n    str_part = [item for item in mixed_list if isinstance(item, str)]\n    \n    # Sort both lists\n    int_part.sort()\n    str_part.sort()\n    \n    # Combine the sorted lists\n    sorted_list = int_part + str_part\n    \n    return sorted_list",
+      "error": null,
+      "task_id": "MBPP/37"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def div_even_odd(numbers):\n    even_found = False\n    odd_found = False\n    for num in numbers:\n        if not even_found and num % 2 == 0:\n            even_num = num\n            even_found = True\n        elif not odd_found and num % 2 != 0:\n            odd_num = num\n            odd_found = True\n        if even_found and odd_found:\n            return even_num / odd_num\n    return None  # Return None if there are no even or odd numbers in the list",
+      "error": null,
+      "task_id": "MBPP/38"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "from collections import Counter\n\ndef freq_element(list_of_lists):\n    # Flatten the list of lists into a single list\n    flattened_list = [item for sublist in list_of_lists for item in sublist]\n    # Use Counter to count the frequency of each element\n    frequency = Counter(flattened_list)\n    return frequency",
+      "error": null,
+      "task_id": "MBPP/40"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "from collections import Counter\n\ndef rearange_string(s):\n    # Count the frequency of each character\n    char_count = Counter(s)\n    \n    # Find the maximum frequency\n    max_freq = max(char_count.values())\n    \n    # If the maximum frequency is more than half the length of the string plus one, return False\n    if max_freq > (len(s) + 1) // 2:\n        return False\n    \n    return True\n\ndef rearrange_string(s):\n    if not rearange_string(s):\n        return \"Cannot be rearranged\"\n    \n    # Create a list to store the characters in the order they will appear\n    result = [''] * len(s)\n    \n    # Find the character with the maximum frequency\n    max_char = max(char_count, key=char_count.get)\n    char_count[max_char] -= 1\n    \n    # Place the most frequent character at alternate positions\n    index = 0\n    while char_count[max_char] > 0:\n        result[index] = max_char\n        index += 2\n        char_count[max_char] -= 1\n    \n    # Place the remaining characters\n    for char in char_count:\n        while char_count[char] > 0:\n            if index >= len(s):\n                index = 1\n            result[index] = char\n            index += 2\n            char_count[char] -= 1\n    \n    return ''.join(result)",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmpcmw5glwq.py\", line 44, in <module>\n    assert rearange_string(\"aab\")==('aba')\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "task_id": "MBPP/39"
+    }
+  ],
+  "basic_results": [
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def is_not_prime(n):\n    if n <= 1:\n        return True\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return True\n    return False",
+      "error": null,
+      "used_error_info": false,
+      "task_id": "MBPP/3"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "import heapq\n\ndef heap_queue_largest(numbers, n):\n    \"\"\"\n    Find the n largest integers from a given list of numbers using the heap queue algorithm.\n\n    :param numbers: List of integers.\n    :param n: Number of largest integers to find.\n    :return: A list containing the n largest integers.\n    \"\"\"\n    return heapq.nlargest(n, numbers)",
+      "error": null,
+      "used_error_info": false,
+      "task_id": "MBPP/4"
+    },
+    {
+      "passed": true,
+      "attempts": 2,
+      "code": "def similar_elements(tup1, tup2):\n    return tuple(sorted(set(tup1) & set(tup2)))",
+      "error": null,
+      "used_error_info": true,
+      "task_id": "MBPP/2"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "import re\n\ndef find_char_long(text):\n    return re.findall(r'\\b\\w{4,}\\b', text)",
+      "error": null,
+      "used_error_info": false,
+      "task_id": "MBPP/7"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def is_Power_Of_Two(a, b):\n    return (a ^ b) & ((a ^ b) - 1) == 0",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmph397hftz.py\", line 3, in <module>\n    assert differ_At_One_Bit_Pos(13,9) == True\n           ^^^^^^^^^^^^^^^^^^^^^\nNameError: name 'differ_At_One_Bit_Pos' is not defined\n",
+      "used_error_info": true,
+      "task_id": "MBPP/6"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def square_nums(nums):\n    return list(map(lambda x: x ** 2, nums))",
+      "error": null,
+      "used_error_info": false,
+      "task_id": "MBPP/8"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def count_ways(n):\n    if n == 0:\n        return 1\n    elif n == 1:\n        return 1\n    else:\n        a, b = 1, 1\n        for i in range(2, n + 1):\n            a, b = b, a + b\n        return b",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmpi19fof2b.py\", line 11, in <module>\n    assert count_ways(2) == 3\n           ^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "used_error_info": true,
+      "task_id": "MBPP/5"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def small_nnum(data, n):\n    \"\"\"\n    Returns the n smallest items from the given dataset.\n    \n    Parameters:\n    data (list): The list of numerical values from which to find the smallest items.\n    n (int): The number of smallest items to return.\n    \n    Returns:\n    list: A list containing the n smallest items from the dataset.\n    \"\"\"\n    if n <= 0:\n        raise ValueError(\"n must be a positive integer\")\n    if not data or len(data) < n:\n        raise ValueError(\"Dataset is too small for the requested number of items\")\n    \n    return sorted(data)[:n]",
+      "error": null,
+      "used_error_info": false,
+      "task_id": "MBPP/10"
+    },
+    {
+      "passed": true,
+      "attempts": 2,
+      "code": "def find_Rotations(s):\n    n = len(s)\n    for i in range(1, n):\n        if s[i:] + s[:i] == s:\n            return i\n    return n",
+      "error": null,
+      "used_error_info": true,
+      "task_id": "MBPP/9"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def remove_Occ(s, char):\n    # Find the index of the first occurrence of the character\n    first_index = s.find(char)\n    \n    # If the character is not found, return the original string\n    if first_index == -1:\n        return s\n    \n    # Remove the first occurrence by slicing the string\n    s = s[:first_index] + s[first_index+1:]\n    \n    # Find the index of the last occurrence of the character\n    last_index = s.rfind(char)\n    \n    # If the character is not found, return the modified string so far\n    if last_index == -1:\n        return s\n    \n    # Remove the last occurrence by slicing the string\n    s = s[:last_index] + s[last_index+1:]\n    \n    return s",
+      "error": null,
+      "used_error_info": false,
+      "task_id": "MBPP/11"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def sort_matrix(matrix):\n    return sorted(matrix, key=lambda row: sum(row))",
+      "error": null,
+      "used_error_info": false,
+      "task_id": "MBPP/12"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "import re\n\ndef split_lowerstring(s):\n    return re.findall('[a-z][^a-z]*', s)",
+      "error": null,
+      "used_error_info": false,
+      "task_id": "MBPP/15"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def find_Volume(base, height, length):\n    \"\"\"\n    Calculate the volume of a triangular prism.\n    \n    Parameters:\n    base (float): The base length of the triangular face.\n    height (float): The height of the triangular face.\n    length (float): The length of the prism.\n    \n    Returns:\n    float: The volume of the triangular prism.\n    \"\"\"\n    return 0.5 * base * height * length",
+      "error": null,
+      "used_error_info": false,
+      "task_id": "MBPP/14"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def min_cost(cost, m, n):\n    # Create a 2D array to store the minimum cost to reach each cell\n    dp = [[0] * (n + 1) for _ in range(m + 1)]\n    \n    # Initialize the top-left corner with the cost of reaching that cell\n    dp[0][0] = cost[0][0]\n    \n    # Fill the first row\n    for j in range(1, n + 1):\n        dp[0][j] = dp[0][j - 1] + cost[0][j]\n    \n    # Fill the first column\n    for i in range(1, m + 1):\n        dp[i][0] = dp[i - 1][0] + cost[i][0]\n    \n    # Fill the rest of the dp array\n    for i in range(1, m + 1):\n        for j in range(1, n + 1):\n            dp[i][j] = min(dp[i - 1][j], dp[i][j - 1]) + cost[i][j]\n    \n    # The minimum cost to reach the bottom-right corner\n    return dp[m][n]\n\n# Test the function with the provided test case\nassert min_cost([[1, 2, 3], [4, 8, 2], [1, 5, 3]], 2, 2) == 8",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmp0cpajx7o.py\", line 25, in <module>\n    assert min_cost([[1, 2, 3], [4, 8, 2], [1, 5, 3]], 2, 2) == 8\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "used_error_info": true,
+      "task_id": "MBPP/1"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def square_perimeter(side_length):\n    return 4 * side_length",
+      "error": null,
+      "used_error_info": false,
+      "task_id": "MBPP/17"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def test_duplicate(arr):\n    seen = set()\n    for num in arr:\n        if num in seen:\n            return True\n        seen.add(num)\n    return False",
+      "error": null,
+      "used_error_info": false,
+      "task_id": "MBPP/19"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "from collections import Counter\n\ndef count_common(words):\n    word_counts = Counter(words)\n    most_common_words = word_counts.most_common()\n    return most_common_words",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmp3_wjygzz.py\", line 7, in <module>\n    assert count_common(['red','green','black','pink','black','white','black','eyes','white','black','orange','pink','pink','red','red','white','orange','white',\"black\",'pink','green','green','pink','green','pink','white','orange',\"orange\",'red']) == [('pink', 6), ('black', 5), ('white', 5), ('red', 4)]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^...",
+      "used_error_info": true,
+      "task_id": "MBPP/13"
+    },
+    {
+      "passed": true,
+      "attempts": 2,
+      "code": "import re\n\ndef text_lowercase_underscore(text):\n    pattern = r'^[a-z]+_[a-z]+$'\n    if re.match(pattern, text):\n        return 'Found a match!'\n    else:\n        return 'Not matched!'",
+      "error": null,
+      "used_error_info": true,
+      "task_id": "MBPP/16"
+    },
+    {
+      "passed": true,
+      "attempts": 2,
+      "code": "def str_to_list(s):\n    return list(s)\n\ndef remove_dirty_chars(str1, str2):\n    str1_list = str_to_list(str1)\n    str2_set = set(str2)\n    \n    result = [char for char in str1_list if char not in str2_set]\n    \n    return ''.join(result)",
+      "error": null,
+      "used_error_info": true,
+      "task_id": "MBPP/18"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def multiples_of_num(m, n):\n    return [i for i in range(n, (m+1)*n, n)]",
+      "error": null,
+      "used_error_info": false,
+      "task_id": "MBPP/21"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def find_first_duplicate(nums):\n    seen = set()\n    for num in nums:\n        if num in seen:\n            return num\n        seen.add(num)\n    return -1",
+      "error": null,
+      "used_error_info": false,
+      "task_id": "MBPP/22"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def maximum_Sum(list_of_lists):\n    return max(sum(sublist) for sublist in list_of_lists)",
+      "error": null,
+      "used_error_info": false,
+      "task_id": "MBPP/23"
+    },
+    {
+      "passed": true,
+      "attempts": 2,
+      "code": "def binary_to_decimal(binary):\n    return int(str(binary), 2)",
+      "error": null,
+      "used_error_info": true,
+      "task_id": "MBPP/24"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "import re\n\ndef remove(strings):\n    return [re.sub(r'\\d', '', s) for s in strings]",
+      "error": null,
+      "used_error_info": false,
+      "task_id": "MBPP/27"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def is_woodall(n):\n    if n < 2:\n        return False\n    k = 0\n    while (n + 1) % (k + 1) == 0 and (n // (k + 1)) & 1 == 0:\n        n = n // (k + 1)\n        k += 1\n    return n == 1",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmpq8oqez9g.py\", line 9, in <module>\n    assert is_woodall(383) == True\n           ^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "used_error_info": true,
+      "task_id": "MBPP/20"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def find_Product(arr):\n    product = 1\n    count = {}\n    \n    # Count occurrences of each element\n    for num in arr:\n        if num in count:\n            count[num] += 1\n        else:\n            count[num] = 1\n    \n    # Multiply non-repeated elements\n    for num, freq in count.items():\n        if freq == 1:\n            product *= num\n    \n    return product",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmp8plt5q4q.py\", line 18, in <module>\n    assert find_Product([1,1,2,3],4) == 6\n           ^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: find_Product() takes 1 positional argument but 2 were given\n",
+      "used_error_info": true,
+      "task_id": "MBPP/25"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def check_k_elements(tuples_list, k):\n    return all(len(tup) == k for tup in tuples_list)",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmp59xfta6f.py\", line 3, in <module>\n    assert check_k_elements([(4, 4), (4, 4, 4), (4, 4), (4, 4, 4, 4), (4, )], 4) == True\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "used_error_info": true,
+      "task_id": "MBPP/26"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def binomial_Coeff(n, k):\n    if k > n:\n        return 0\n    if k == 0 or k == n:\n        return 1\n    return binomial_Coeff(n-1, k-1) + binomial_Coeff(n-1, k)",
+      "error": null,
+      "used_error_info": false,
+      "task_id": "MBPP/28"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def max_Prime_Factors(n):\n    # Initialize the maximum prime factor\n    max_prime = -1\n    \n    # Divide n by 2 to remove all even factors\n    while n % 2 == 0:\n        max_prime = 2\n        n //= 2\n    \n    # n must be odd at this point, so a skip of 2 (i.e., i += 2) can be used\n    for i in range(3, int(n**0.5) + 1, 2):\n        while n % i == 0:\n            max_prime = i\n            n //= i\n    \n    # If n is a prime number greater than 2\n    if n > 2:\n        max_prime = n\n    \n    return max_prime",
+      "error": null,
+      "used_error_info": false,
+      "task_id": "MBPP/32"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def get_Odd_Occurrence(arr):\n    result = 0\n    for element in arr:\n        result ^= element\n    return result",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmpciin33gk.py\", line 6, in <module>\n    assert get_Odd_Occurrence([1,2,3,1,2,3,1],7) == 1\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: get_Odd_Occurrence() takes 1 positional argument but 2 were given\n",
+      "used_error_info": true,
+      "task_id": "MBPP/29"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def check_Equality(s):\n    count = 0\n    n = len(s)\n    for i in range(n):\n        for j in range(i, n):\n            if s[i] == s[j]:\n                count += 1\n    return count",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmpokhbz3ij.py\", line 9, in <module>\n    assert count_Substring_With_Equal_Ends(\"abc\") == 3\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nNameError: name 'count_Substring_With_Equal_Ends' is not defined\n",
+      "used_error_info": true,
+      "task_id": "MBPP/30"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def find_rect_num(n):\n    return n * (n + 1)",
+      "error": null,
+      "used_error_info": false,
+      "task_id": "MBPP/35"
+    },
+    {
+      "passed": true,
+      "attempts": 2,
+      "code": "def find_missing(arr, n):\n    left, right = 0, n - 1\n    while left <= right:\n        mid = (left + right) // 2\n        if arr[mid] != mid + 1 and (mid == 0 or arr[mid - 1] == mid):\n            return mid + 1\n        elif arr[mid] != mid + 1:\n            right = mid - 1\n        else:\n            left = mid + 1\n    return n + 1",
+      "error": null,
+      "used_error_info": true,
+      "task_id": "MBPP/34"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def decimal_To_Binary(decimal_number):\n    if decimal_number == 0:\n        return \"0\"\n    binary_number = \"\"\n    while decimal_number > 0:\n        remainder = decimal_number % 2\n        binary_number = str(remainder) + binary_number\n        decimal_number = decimal_number // 2\n    return binary_number\n\n# Test the function with the provided test case\nassert decimal_To_Binary(10) == \"1010\"",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmp8_0fu_x6.py\", line 13, in <module>\n    assert decimal_To_Binary(10) == 1010\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "used_error_info": true,
+      "task_id": "MBPP/33"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def find_Nth_Digit(numerator, denominator, n):\n    remainder = numerator % denominator\n    count = 0\n    \n    while remainder != 0 and count < n:\n        remainder *= 10\n        digit = remainder // denominator\n        remainder %= denominator\n        count += 1\n        \n        if count == n:\n            return digit\n    \n    return -1  # If the nth digit is not found within the first n digits of the repeating part\n\n# Example usage:\nprint(find_Nth_Digit(1, 3, 1))  # Output: 3 (1/3 = 0.333...)\nprint(find_Nth_Digit(2, 7, 6))  # Output: 8 (2/7 = 0.285714285714...)",
+      "error": null,
+      "used_error_info": false,
+      "task_id": "MBPP/36"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "import heapq\nfrom collections import Counter\n\ndef func(lists, k):\n    # Flatten the list of lists and count the frequency of each integer\n    flattened_list = [num for sublist in lists for num in sublist]\n    counter = Counter(flattened_list)\n    \n    # Use a min heap to keep track of top k elements\n    min_heap = []\n    for num, freq in counter.items():\n        if len(min_heap) < k:\n            heapq.heappush(min_heap, (freq, num))\n        elif freq > min_heap[0][0]:\n            heapq.heappop(min_heap)\n            heapq.heappush(min_heap, (freq, num))\n    \n    # Extract the numbers from the heap and sort them by frequency\n    top_k = [heapq.heappop(min_heap)[1] for _ in range(len(min_heap))]\n    return sorted(top_k, key=lambda x: (-counter[x], x))\n\n# Test the function with the provided test case\nassert func([[1, 2, 6], [1, 3, 4, 5, 7, 8], [1, 3, 5, 6, 8, 9], [2, 5, 7, 11], [1, 4, 7, 8, 12]], 3) == [5, 7, 1]",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmp76s2_tdu.py\", line 23, in <module>\n    assert func([[1, 2, 6], [1, 3, 4, 5, 7, 8], [1, 3, 5, 6, 8, 9], [2, 5, 7, 11], [1, 4, 7, 8, 12]], 3) == [5, 7, 1]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "used_error_info": true,
+      "task_id": "MBPP/31"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def sort_mixed_list(mixed_list):\n    # Separate integers and strings into two lists\n    int_part = [item for item in mixed_list if isinstance(item, int)]\n    str_part = [item for item in mixed_list if isinstance(item, str)]\n    \n    # Sort both lists\n    int_part.sort()\n    str_part.sort()\n    \n    # Combine the sorted lists\n    sorted_list = int_part + str_part\n    \n    return sorted_list",
+      "error": null,
+      "used_error_info": false,
+      "task_id": "MBPP/37"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def div_even_odd(numbers):\n    even_found = False\n    odd_found = False\n    for num in numbers:\n        if not even_found and num % 2 == 0:\n            even_number = num\n            even_found = True\n        elif not odd_found and num % 2 != 0:\n            odd_number = num\n            odd_found = True\n        if even_found and odd_found:\n            break\n    return even_number / odd_number",
+      "error": null,
+      "used_error_info": false,
+      "task_id": "MBPP/38"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "from collections import Counter\n\ndef freq_element(list_of_lists):\n    # Flatten the list of lists into a single list\n    flattened_list = [item for sublist in list_of_lists for item in sublist]\n    # Use Counter to count the frequency of each element\n    frequency = Counter(flattened_list)\n    return frequency",
+      "error": null,
+      "used_error_info": false,
+      "task_id": "MBPP/40"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "from collections import Counter\nimport heapq\n\ndef rearange_string(s):\n    # Count the frequency of each character\n    char_count = Counter(s)\n    max_heap = []\n    \n    # Push all characters into a max heap based on their frequency\n    for char, count in char_count.items():\n        heapq.heappush(max_heap, (-count, char))\n    \n    prev_char = None\n    prev_count = 0\n    result = []\n    \n    while max_heap:\n        count, char = heapq.heappop(max_heap)\n        \n        # If there is a previous character that needs to be added back to the heap\n        if prev_char:\n            heapq.heappush(max_heap, (prev_count, prev_char))\n        \n        result.append(char)\n        prev_char = char\n        prev_count = count + 1  # Increase the count since it's stored as negative\n        \n        # If the heap is empty and there are still characters left to place\n        if not max_heap and prev_count != 0:\n            return \"\"\n    \n    return ''.join(result)\n\n# Test cases\nprint(rearange_string(\"aab\"))  # Output: \"aba\"\nprint(rearange_string(\"aaabbc\"))  # Output: \"abcabc\" or any other valid rearrangement",
+      "error": "Timeout -- possible infinite loop",
+      "used_error_info": true,
+      "task_id": "MBPP/39"
+    }
+  ],
+  "advanced_results": [
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def is_not_prime(n):\n    if n <= 1:\n        return True\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return True\n    return False",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/3"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "import heapq\n\ndef heap_queue_largest(numbers, n):\n    \"\"\"\n    Find the n largest integers from a given list of numbers using the heap queue algorithm.\n\n    :param numbers: List of integers.\n    :param n: Number of largest integers to find.\n    :return: A list containing the n largest integers.\n    \"\"\"\n    return heapq.nlargest(n, numbers)",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/4"
+    },
+    {
+      "passed": true,
+      "attempts": 2,
+      "code": "def similar_elements(tup1, tup2):\n    return tuple(set(tup1) & set(tup2))",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/2"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "import re\n\ndef find_char_long(text):\n    return re.findall(r'\\b\\w{4,}\\b', text)",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/7"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def is_Power_Of_Two(a, b):\n    return (a ^ b) & ((a ^ b) - 1) == 0",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmpvhxp8r1r.py\", line 3, in <module>\n    assert differ_At_One_Bit_Pos(13,9) == True\n           ^^^^^^^^^^^^^^^^^^^^^\nNameError: name 'differ_At_One_Bit_Pos' is not defined\n",
+      "used_toolbox": false,
+      "task_id": "MBPP/6"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def square_nums(nums):\n    return list(map(lambda x: x ** 2, nums))",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/8"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def count_ways(n):\n    if n == 0:\n        return 1\n    elif n == 1:\n        return 1\n    else:\n        a, b = 1, 1\n        for i in range(2, n + 1):\n            a, b = b, a + b\n        return b",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmpgbxgwxbv.py\", line 11, in <module>\n    assert count_ways(2) == 3\n           ^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "used_toolbox": false,
+      "task_id": "MBPP/5"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def small_nnum(data, n):\n    \"\"\"\n    Returns the n smallest items from the given dataset.\n    \n    Parameters:\n    data (list): The list of numerical values from which to find the smallest items.\n    n (int): The number of smallest items to return.\n    \n    Returns:\n    list: A list containing the n smallest items from the dataset.\n    \"\"\"\n    if n <= 0:\n        raise ValueError(\"n must be a positive integer\")\n    if not data or len(data) < n:\n        raise ValueError(\"The dataset is too small for the requested number of items\")\n    \n    return sorted(data)[:n]",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/10"
+    },
+    {
+      "passed": true,
+      "attempts": 2,
+      "code": "def find_Rotations(s):\n    n = len(s)\n    for i in range(1, n):\n        if s[i:] + s[:i] == s:\n            return i\n    return n",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/9"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def remove_Occ(s, char):\n    # Find the index of the first occurrence of the character\n    first_index = s.find(char)\n    \n    # If the character is not found, return the original string\n    if first_index == -1:\n        return s\n    \n    # Remove the first occurrence by slicing the string\n    s = s[:first_index] + s[first_index+1:]\n    \n    # Find the index of the last occurrence of the character\n    last_index = s.rfind(char)\n    \n    # If the character is not found, return the modified string so far\n    if last_index == -1:\n        return s\n    \n    # Remove the last occurrence by slicing the string\n    s = s[:last_index] + s[last_index+1:]\n    \n    return s",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/11"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def sort_matrix(matrix):\n    return sorted(matrix, key=lambda row: sum(row))",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/12"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "import re\n\ndef split_lowerstring(s):\n    return re.findall('[a-z][^a-z]*', s)",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/15"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def find_Volume(base, height, length):\n    \"\"\"\n    Calculate the volume of a triangular prism.\n    \n    Parameters:\n    base (float): The base length of the triangular face.\n    height (float): The height of the triangular face.\n    length (float): The length of the prism.\n    \n    Returns:\n    float: The volume of the triangular prism.\n    \"\"\"\n    return 0.5 * base * height * length",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/14"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def min_cost(cost, m, n):\n    # Create a 2D array to store the minimum cost to reach each cell\n    dp = [[0] * (n + 1) for _ in range(m + 1)]\n    \n    # Initialize the top-left corner with the cost of reaching that cell\n    dp[0][0] = cost[0][0]\n    \n    # Fill the first row\n    for j in range(1, n + 1):\n        dp[0][j] = dp[0][j - 1] + cost[0][j]\n    \n    # Fill the first column\n    for i in range(1, m + 1):\n        dp[i][0] = dp[i - 1][0] + cost[i][0]\n    \n    # Fill the rest of the dp array\n    for i in range(1, m + 1):\n        for j in range(1, n + 1):\n            dp[i][j] = min(dp[i - 1][j], dp[i][j - 1]) + cost[i][j]\n    \n    # The minimum cost to reach the bottom-right corner\n    return dp[m][n]\n\n# Test the function with the provided test case\nassert min_cost([[1, 2, 3], [4, 8, 2], [1, 5, 3]], 2, 2) == 8",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmp5j4m3wly.py\", line 25, in <module>\n    assert min_cost([[1, 2, 3], [4, 8, 2], [1, 5, 3]], 2, 2) == 8\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "used_toolbox": false,
+      "task_id": "MBPP/1"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def square_perimeter(side_length):\n    return 4 * side_length",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/17"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def test_duplicate(arr):\n    seen = set()\n    for num in arr:\n        if num in seen:\n            return True\n        seen.add(num)\n    return False",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/19"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "from collections import Counter\n\ndef count_common(words):\n    word_counts = Counter(words)\n    most_common_words = word_counts.most_common()\n    return most_common_words",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmprf7djq4i.py\", line 7, in <module>\n    assert count_common(['red','green','black','pink','black','white','black','eyes','white','black','orange','pink','pink','red','red','white','orange','white',\"black\",'pink','green','green','pink','green','pink','white','orange',\"orange\",'red']) == [('pink', 6), ('black', 5), ('white', 5), ('red', 4)]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^...",
+      "used_toolbox": false,
+      "task_id": "MBPP/13"
+    },
+    {
+      "passed": true,
+      "attempts": 2,
+      "code": "import re\n\ndef text_lowercase_underscore(text):\n    pattern = r'^[a-z]+_[a-z]+$'\n    if re.match(pattern, text):\n        return 'Found a match!'\n    else:\n        return 'Not matched!'",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/16"
+    },
+    {
+      "passed": true,
+      "attempts": 2,
+      "code": "def str_to_list(s):\n    return list(s)\n\ndef remove_dirty_chars(str1, str2):\n    str1_list = str_to_list(str1)\n    str2_set = set(str2)\n    \n    result_list = [char for char in str1_list if char not in str2_set]\n    \n    return ''.join(result_list)",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/18"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def multiples_of_num(m, n):\n    return [i for i in range(n, (m+1)*n, n)]",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/21"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def find_first_duplicate(nums):\n    seen = set()\n    for num in nums:\n        if num in seen:\n            return num\n        seen.add(num)\n    return -1",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/22"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def maximum_Sum(list_of_lists):\n    return max(sum(sublist) for sublist in list_of_lists)",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/23"
+    },
+    {
+      "passed": true,
+      "attempts": 2,
+      "code": "def binary_to_decimal(binary):\n    return int(str(binary), 2)",
+      "error": null,
+      "used_toolbox": true,
+      "task_id": "MBPP/24"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "import re\n\ndef remove(strings):\n    return [re.sub(r'\\d', '', s) for s in strings]",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/27"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def is_woodall(n):\n    if n < 2:\n        return False\n    k = 0\n    while (n + 1) % (k + 1) == 0 and (n + 1) // (k + 1) == 2 ** k:\n        k += 1\n    return k > 0",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmpxw57yc9d.py\", line 8, in <module>\n    assert is_woodall(383) == True\n           ^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "used_toolbox": false,
+      "task_id": "MBPP/20"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def find_Product(arr):\n    product = 1\n    count = {}\n    \n    # Count occurrences of each element\n    for num in arr:\n        if num in count:\n            count[num] += 1\n        else:\n            count[num] = 1\n    \n    # Multiply non-repeated elements\n    for num, freq in count.items():\n        if freq == 1:\n            product *= num\n    \n    return product",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmp_r5dkz2d.py\", line 18, in <module>\n    assert find_Product([1,1,2,3],4) == 6\n           ^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: find_Product() takes 1 positional argument but 2 were given\n",
+      "used_toolbox": false,
+      "task_id": "MBPP/25"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def check_k_elements(tuples_list, k):\n    return all(len(tup) == k for tup in tuples_list)",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmpuowg0jih.py\", line 3, in <module>\n    assert check_k_elements([(4, 4), (4, 4, 4), (4, 4), (4, 4, 4, 4), (4, )], 4) == True\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "used_toolbox": false,
+      "task_id": "MBPP/26"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def binomial_Coeff(n, k):\n    if k > n:\n        return 0\n    if k == 0 or k == n:\n        return 1\n    return binomial_Coeff(n-1, k-1) + binomial_Coeff(n-1, k)",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/28"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def max_Prime_Factors(n):\n    # Initialize the maximum prime factor\n    max_prime = -1\n    \n    # Divide n by 2 to remove all even factors\n    while n % 2 == 0:\n        max_prime = 2\n        n //= 2\n    \n    # n must be odd at this point, so a skip of 2 (i.e., i += 2) can be used\n    for i in range(3, int(n**0.5) + 1, 2):\n        while n % i == 0:\n            max_prime = i\n            n //= i\n    \n    # If n is a prime number greater than 2\n    if n > 2:\n        max_prime = n\n    \n    return max_prime",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/32"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def get_Odd_Occurrence(arr):\n    result = 0\n    for element in arr:\n        result ^= element\n    return result",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmpb7br9kwf.py\", line 6, in <module>\n    assert get_Odd_Occurrence([1,2,3,1,2,3,1],7) == 1\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: get_Odd_Occurrence() takes 1 positional argument but 2 were given\n",
+      "used_toolbox": false,
+      "task_id": "MBPP/29"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def check_Equality(s):\n    count = 0\n    n = len(s)\n    for i in range(n):\n        for j in range(i, n):\n            if s[i] == s[j]:\n                count += 1\n    return count",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmpowcxhrsq.py\", line 9, in <module>\n    assert count_Substring_With_Equal_Ends(\"abc\") == 3\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nNameError: name 'count_Substring_With_Equal_Ends' is not defined\n",
+      "used_toolbox": false,
+      "task_id": "MBPP/30"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def find_rect_num(n):\n    return n * (n + 1)",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/35"
+    },
+    {
+      "passed": true,
+      "attempts": 2,
+      "code": "def find_missing(arr, n):\n    left, right = 0, n - 1\n    while left <= right:\n        mid = (left + right) // 2\n        # Check if the missing number is in the left half\n        if arr[mid] != mid + 1 and (mid == 0 or arr[mid - 1] == mid):\n            return mid + 1\n        elif arr[mid] != mid + 1:\n            right = mid - 1\n        else:\n            left = mid + 1\n    # If no missing number is found, it means the missing number is at the end of the array\n    return n + 1",
+      "error": null,
+      "used_toolbox": true,
+      "task_id": "MBPP/34"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "def decimal_To_Binary(decimal_number):\n    if decimal_number == 0:\n        return \"0\"\n    binary_number = \"\"\n    while decimal_number > 0:\n        remainder = decimal_number % 2\n        binary_number = str(remainder) + binary_number\n        decimal_number = decimal_number // 2\n    return binary_number\n\n# Test the function with the provided test case\nassert decimal_To_Binary(10) == \"1010\"",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmpca_qmz85.py\", line 13, in <module>\n    assert decimal_To_Binary(10) == 1010\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "used_toolbox": false,
+      "task_id": "MBPP/33"
+    },
+    {
+      "passed": true,
+      "attempts": 3,
+      "code": "def find_Nth_Digit(numerator, denominator, nth_digit):\n    # Convert the fraction to a decimal and remove the \"0.\"\n    decimal_part = str(numerator / denominator)[2:]\n    \n    # Check if the requested digit is within the length of the decimal part\n    if nth_digit > len(decimal_part):\n        return -1  # Return -1 if the digit does not exist\n    \n    # Return the nth digit (1-indexed)\n    return int(decimal_part[nth_digit - 1])",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/36"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "import heapq\nfrom collections import Counter\n\ndef func(lists, k):\n    # Flatten the list of lists and count the frequency of each integer\n    flattened_list = [num for sublist in lists for num in sublist]\n    counter = Counter(flattened_list)\n    \n    # Use a min heap to keep track of top k elements\n    min_heap = []\n    for num, freq in counter.items():\n        if len(min_heap) < k:\n            heapq.heappush(min_heap, (freq, num))\n        elif freq > min_heap[0][0]:\n            heapq.heappop(min_heap)\n            heapq.heappush(min_heap, (freq, num))\n    \n    # Extract the numbers from the heap and sort them by frequency\n    top_k = [heapq.heappop(min_heap)[1] for _ in range(len(min_heap))]\n    return sorted(top_k, key=lambda x: counter[x], reverse=True)",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmp4nb8q_3y.py\", line 21, in <module>\n    assert func([[1, 2, 6], [1, 3, 4, 5, 7, 8], [1, 3, 5, 6, 8, 9], [2, 5, 7, 11], [1, 4, 7, 8, 12]],3)==[5, 7, 1]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "used_toolbox": false,
+      "task_id": "MBPP/31"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def sort_mixed_list(mixed_list):\n    # Separate integers and strings into two lists\n    int_part = [item for item in mixed_list if isinstance(item, int)]\n    str_part = [item for item in mixed_list if isinstance(item, str)]\n    \n    # Sort both lists\n    int_part.sort()\n    str_part.sort()\n    \n    # Combine the sorted lists\n    sorted_list = int_part + str_part\n    \n    return sorted_list",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/37"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "def div_even_odd(numbers):\n    even_found = False\n    odd_found = False\n    for num in numbers:\n        if not even_found and num % 2 == 0:\n            even_num = num\n            even_found = True\n        elif not odd_found and num % 2 != 0:\n            odd_num = num\n            odd_found = True\n        if even_found and odd_found:\n            return even_num / odd_num\n    return None  # Return None if there are no even or odd numbers in the list",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/38"
+    },
+    {
+      "passed": true,
+      "attempts": 1,
+      "code": "from collections import Counter\n\ndef freq_element(list_of_lists):\n    # Flatten the list of lists into a single list\n    flattened_list = [item for sublist in list_of_lists for item in sublist]\n    # Use Counter to count the frequency of each element\n    frequency = Counter(flattened_list)\n    return frequency",
+      "error": null,
+      "used_toolbox": false,
+      "task_id": "MBPP/40"
+    },
+    {
+      "passed": false,
+      "attempts": 3,
+      "code": "from collections import Counter\nimport heapq\n\ndef rearange_string(s):\n    # Count the frequency of each character\n    char_count = Counter(s)\n    max_heap = [(-freq, char) for char, freq in char_count.items()]\n    heapq.heapify(max_heap)\n    \n    prev_char = None\n    prev_freq = 0\n    result = []\n    \n    while max_heap or prev_freq:\n        if prev_freq < 0:\n            heapq.heappush(max_heap, (prev_freq, prev_char))\n        \n        if not max_heap:\n            return \"\"  # Cannot rearrange\n        \n        freq, char = heapq.heappop(max_heap)\n        result.append(char)\n        prev_char = char\n        prev_freq = freq + 1  # Increase frequency since it's stored as negative\n    \n    return ''.join(result)\n\n# Test the function with the provided test case\nassert rearange_string(\"aab\") == \"aba\"",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\TOBIAS~1\\AppData\\Local\\Temp\\tmpw0v9njqz.py\", line 29, in <module>\n    assert rearange_string(\"aab\") == \"aba\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "used_toolbox": false,
+      "task_id": "MBPP/39"
+    }
+  ],
+  "baseline_passed": 22,
+  "basic_passed": 28,
+  "advanced_passed": 28
+}
