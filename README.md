@@ -253,3 +253,6 @@ Inspired by:
 - OCEAN personality model (adapted for error patterns)
 - John Ousterhout's deep modules philosophy
 - Aider's agentic coding paradigm
+
+Collaboration between:
+SenatorThunfisch & KIMI K2.6 Agent
