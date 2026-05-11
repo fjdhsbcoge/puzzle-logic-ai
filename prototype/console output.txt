@@ -1,0 +1,455 @@
+C:\Users\Tobias Rickert\Desktop\puzzle-logic-ai\prototype\mbpp_three_way_runner_v26.py --model qwen2.5-coder-7b-instruct --limit 40 --workers 4
+======================================================================
+  MBPP Three-Way Benchmark — v2.6 PIPELINED CONCURRENT
+  Baseline | Basic V2 | Advanced V2 (Omega + λ)
+  Worker threads: 4 (each problem = all 3 modes)
+  Output: puzzle_logic_knowledge.json + puzzle_logic_log.json
+======================================================================
+LM Studio detected: qwen2.5-coder-7b-instruct
+Knowledge graph: 0 existing patterns | Omega=0.5
+======================================================================
+
+Starting 4 workers for 40 problems...
+Each worker processes one problem through all 3 modes (9 LLM calls).
+
+  [1] MBPP/3: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=1/1 V2=1/1 Adv=1/1
+  [2] MBPP/4: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=2/2 V2=2/2 Adv=2/2
+    [REASSEMBLY] AssertionError: 1 patterns reset to confidence 0.5
+  [3] MBPP/2: Base=FAIL(3) Basic=PASS(2)+err Adv=PASS(2)clean | B=2/3 V2=3/3 Adv=3/3
+  [4] MBPP/7: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=3/4 V2=4/4 Adv=4/4
+  [5] MBPP/6: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)clean | B=3/5 V2=4/5 Adv=4/5
+  [6] MBPP/8: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=4/6 V2=5/6 Adv=5/6
+    [PENALTY] AssertionError: 1 specific patterns decayed × 0.8
+  [7] MBPP/5: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)toolbox | B=4/7 V2=5/7 Adv=5/7
+  [8] MBPP/10: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=5/8 V2=6/8 Adv=6/8
+  [9] MBPP/9: Base=FAIL(3) Basic=PASS(2)+err Adv=PASS(2)clean | B=5/9 V2=7/9 Adv=7/9
+  [10] MBPP/12: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=6/10 V2=8/10 Adv=8/10
+  >>> Saved (1.4m elapsed, ~4.3m remaining)
+  [11] MBPP/11: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=7/11 V2=9/11 Adv=9/11
+  [12] MBPP/15: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=8/12 V2=10/12 Adv=10/12
+    [PENALTY] AssertionError: 1 specific patterns decayed × 0.8
+  [13] MBPP/1: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)toolbox | B=8/13 V2=10/13 Adv=10/13
+  [14] MBPP/14: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=9/14 V2=11/14 Adv=11/14
+  [15] MBPP/17: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=10/15 V2=12/15 Adv=12/15
+  [16] MBPP/19: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=11/16 V2=13/16 Adv=13/16
+  [17] MBPP/16: Base=FAIL(3) Basic=PASS(2)+err Adv=PASS(2)clean | B=11/17 V2=14/17 Adv=14/17
+  [18] MBPP/13: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)clean | B=11/18 V2=14/18 Adv=14/18
+    [REASSEMBLY] NameError: 1 patterns reset to confidence 0.5
+  [19] MBPP/18: Base=FAIL(3) Basic=PASS(2)+err Adv=PASS(2)clean | B=11/19 V2=15/19 Adv=15/19
+  [20] MBPP/23: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=12/20 V2=16/20 Adv=16/20
+  >>> Saved (2.4m elapsed, ~2.4m remaining)
+  [21] MBPP/22: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=13/21 V2=17/21 Adv=17/21
+    [PENALTY] AssertionError: 1 specific patterns decayed × 0.8
+    [REASSEMBLY] AssertionError: 2 patterns reset to confidence 0.5
+  [22] MBPP/21: Base=FAIL(3) Basic=PASS(2)+err Adv=PASS(3)toolbox | B=13/22 V2=18/22 Adv=18/22
+    [REASSEMBLY] TypeError: 1 patterns reset to confidence 0.5
+  [23] MBPP/24: Base=FAIL(3) Basic=PASS(2)+err Adv=PASS(2)clean | B=13/23 V2=19/23 Adv=19/23
+  [24] MBPP/20: Base=FAIL(3) Basic=FAIL(3)+err Adv=PASS(2)toolbox | B=13/24 V2=19/24 Adv=20/24
+  [25] MBPP/27: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=14/25 V2=20/25 Adv=21/25
+    [PENALTY] TypeError: 1 specific patterns decayed × 0.8
+  [26] MBPP/25: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)toolbox | B=14/26 V2=20/26 Adv=21/26
+  [27] MBPP/28: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=15/27 V2=21/27 Adv=22/27
+    [PENALTY] AssertionError: 2 specific patterns decayed × 0.8
+  [28] MBPP/26: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)toolbox | B=15/28 V2=21/28 Adv=22/28
+    [PENALTY] NameError: 1 specific patterns decayed × 0.8
+  [29] MBPP/30: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)toolbox | B=15/29 V2=21/29 Adv=22/29
+  [30] MBPP/32: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=16/30 V2=22/30 Adv=23/30
+  >>> Saved (3.8m elapsed, ~1.3m remaining)
+  [31] MBPP/29: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)clean | B=16/31 V2=22/31 Adv=23/31
+  [32] MBPP/35: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=17/32 V2=23/32 Adv=24/32
+    [REASSEMBLY] TypeError: 2 patterns reset to confidence 0.5
+  [33] MBPP/34: Base=FAIL(3) Basic=PASS(2)+err Adv=PASS(2)clean | B=17/33 V2=24/33 Adv=25/33
+  [34] MBPP/33: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)clean | B=17/34 V2=24/34 Adv=25/34
+  [35] MBPP/31: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)clean | B=17/35 V2=24/35 Adv=25/35
+  [36] MBPP/37: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=18/36 V2=25/36 Adv=26/36
+  [37] MBPP/38: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=19/37 V2=26/37 Adv=27/37
+  [38] MBPP/40: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=20/38 V2=27/38 Adv=28/38
+  [39] MBPP/36: Base=FAIL(3) Basic=PASS(3)+err Adv=PASS(3)clean | B=20/39 V2=28/39 Adv=29/39
+    [PENALTY] AssertionError: 1 specific patterns decayed × 0.8
+  [40] MBPP/39: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)toolbox | B=20/40 V2=28/40 Adv=29/40
+  >>> Saved (5.6m elapsed, ~0.0m remaining)
+
+======================================================================
+  Final results saved to:
+    Knowledge: puzzle_logic_knowledge.json
+    Log:       puzzle_logic_log.json
+  Elapsed: 5.6 minutes (8.4s per problem)
+  Baseline:    20/40  (50.0%)
+  Basic V2:    28/40  (70.0%)
+  Advanced V2: 29/40  (72.5%)
+======================================================================
+
+Coherent Knowledge Graph (5 patterns, Ω=0.45280000000000004):
+  [TypeError] λ=0.9 [local] int() can't convert non-string with explicit base
+    Line: assert binary_to_decimal(100) == 4
+    Fix: Fix:   Changed: return int(binary, 2) -> return int(str(binary), 2)...
+    Confidence: 0.50 | VERIFIED | seen 1x, fixed 1x
+  [TypeError] λ=0.7 [local] find_missing() takes <N> positional argument but <
+    Line: assert find_missing([1,2,3,5],4) == 4
+    Fix: Fix:   Changed: def find_missing(arr): -> def find_missing(arr, n):;  ...
+    Confidence: 0.50 | VERIFIED | seen 1x, fixed 1x
+  [AssertionError] λ=0.4 [mixed] assert similar_elements((<N>, <N>, <N>, <N>),(<N>,
+    Line: assert similar_elements((3, 4, 5, 6),(5, 7, 4, 10)) == (4, 5
+    Fix: Fix:   Changed: def similar_elements(tuple_list1, tuple_list2): -> def...
+    Confidence: 0.46 | VERIFIED | seen 20x, fixed 5x
+  [NameError] λ=0.8 [local] name '<name>' is not defined
+    Line: assert remove_dirty_chars("probasscurve", "pros") == 'bacuve
+    Fix: Fix:   Changed: def str_to_list(str1, str2): -> def str_to_list(s):;  ...
+    Confidence: 0.40 | VERIFIED | seen 4x, fixed 1x
+  [AssertionError] λ=0.6 [local] assert multiples_of_num(<N>,<N>)== [<N>,<N>,<N>,<N
+    Line: assert multiples_of_num(4,3)== [3,6,9,12]
+    Fix: Fix:   Changed: def multiples_of_num(n, m): -> def multiples_of_num(m,...
+    Confidence: 0.40 | VERIFIED | seen 1x, fixed 1x
+
+[3/6] Analyzing knowledge graph growth...
+  Graph: 0 → 0 (+0 new, 0 updated)
+
+[4/6] Extracting training data from ALL 2 historical logs...
+
+>>> C:\Users\Tobias Rickert\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\python.exe C:\Users\Tobias Rickert\Desktop\puzzle-logic-ai\scripts\prepare_training_data.py --log C:\Users\Tobias Rickert\Desktop\puzzle-logic-ai\_combined_log_temp.json --output C:\Users\Tobias Rickert\Desktop\puzzle-logic-ai\training_data_iter1.jsonl
+Loading log: C:\Users\Tobias Rickert\Desktop\puzzle-logic-ai\_combined_log_temp.json
+  18 examples from log (passed after retry)
+
+Writing 18 examples to C:\Users\Tobias Rickert\Desktop\puzzle-logic-ai\training_data_iter1.jsonl
+
+Training data summary:
+  Total examples: 18
+
+Sample example:
+  [system] You are a helpful coding assistant. Write clean, correct Python code....
+  [user] Write a function to find the similar elements from the given two tuple lists.
+
+Write a Python functi...
+  [assistant] def similar_elements(tup1, tup2):
+    return tuple(sorted(set(tup1) & set(tup2)))...
+  Total training examples (all iterations): 18
+
+============================================================
+  ITERATION 1 RESULTS
+============================================================
+  Problems:     40
+  Baseline:     20/40 = 50.0%
+  Basic V2:     28/40 = 70.0%
+  Advanced V2:  29/40 = 72.5%
+
+  Knowledge Graph Growth:
+    Before:     0 patterns
+    After:      0 patterns
+    NEW:        0 patterns
+    Updated:    0 patterns
+============================================================
+
+[5/6] Skipping fine-tuning
+[6/6] Skipping merge
+
+======================================================================
+  ITERATION 2 / 3
+  Model: qwen2.5-coder-7b-instruct
+======================================================================
+
+[1/6] Archiving previous log (keeping knowledge graph)...
+  Archived previous log to: puzzle_logic_log_20260430_114553.json
+  Historical logs: 3
+
+[2/6] Running MBPP benchmark (40 problems)...
+  Keep LMStudio running.
+
+>>> C:\Users\Tobias Rickert\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\python.exe C:\Users\Tobias Rickert\Desktop\puzzle-logic-ai\prototype\mbpp_three_way_runner_v26.py --model qwen2.5-coder-7b-instruct --limit 40 --workers 4
+======================================================================
+  MBPP Three-Way Benchmark — v2.6 PIPELINED CONCURRENT
+  Baseline | Basic V2 | Advanced V2 (Omega + λ)
+  Worker threads: 4 (each problem = all 3 modes)
+  Output: puzzle_logic_knowledge.json + puzzle_logic_log.json
+======================================================================
+LM Studio detected: qwen2.5-coder-7b-instruct
+Knowledge graph: 5 existing patterns | Omega=0.45280000000000004
+======================================================================
+
+Starting 4 workers for 40 problems...
+Each worker processes one problem through all 3 modes (9 LLM calls).
+
+  [1] MBPP/3: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=1/1 V2=1/1 Adv=1/1
+  [2] MBPP/4: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=2/2 V2=2/2 Adv=2/2
+  [3] MBPP/2: Base=FAIL(3) Basic=PASS(2)+err Adv=PASS(2)clean | B=2/3 V2=3/3 Adv=3/3
+  [4] MBPP/7: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=3/4 V2=4/4 Adv=4/4
+  [5] MBPP/6: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)clean | B=3/5 V2=4/5 Adv=4/5
+  [6] MBPP/8: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=4/6 V2=5/6 Adv=5/6
+    [PENALTY] AssertionError: 1 specific patterns decayed × 0.8
+  [7] MBPP/5: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)toolbox | B=4/7 V2=5/7 Adv=5/7
+  [8] MBPP/10: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=5/8 V2=6/8 Adv=6/8
+  [9] MBPP/9: Base=FAIL(3) Basic=PASS(2)+err Adv=PASS(2)clean | B=5/9 V2=7/9 Adv=7/9
+    [PENALTY] TypeError: 2 specific patterns decayed × 0.8
+  [10] MBPP/12: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=6/10 V2=8/10 Adv=8/10
+  >>> Saved (1.4m elapsed, ~4.2m remaining)
+  [11] MBPP/11: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=7/11 V2=9/11 Adv=9/11
+    [PENALTY] AssertionError: 1 specific patterns decayed × 0.8
+  [12] MBPP/1: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)toolbox | B=7/12 V2=9/12 Adv=9/12
+  [13] MBPP/15: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=8/13 V2=10/13 Adv=10/13
+  [14] MBPP/14: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=9/14 V2=11/14 Adv=11/14
+  [15] MBPP/17: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=10/15 V2=12/15 Adv=12/15
+  [16] MBPP/16: Base=FAIL(3) Basic=PASS(2)+err Adv=PASS(2)clean | B=10/16 V2=13/16 Adv=13/16
+  [17] MBPP/19: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=11/17 V2=14/17 Adv=14/17
+  [18] MBPP/18: Base=FAIL(3) Basic=PASS(2)+err Adv=PASS(2)clean | B=11/18 V2=15/18 Adv=15/18
+  [19] MBPP/13: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)clean | B=11/19 V2=15/19 Adv=15/19
+  [20] MBPP/22: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=12/20 V2=16/20 Adv=16/20
+  >>> Saved (2.3m elapsed, ~2.3m remaining)
+  [21] MBPP/23: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=13/21 V2=17/21 Adv=17/21
+    [PENALTY] AssertionError: 1 specific patterns decayed × 0.8
+  [22] MBPP/21: Base=FAIL(3) Basic=PASS(2)+err Adv=PASS(3)toolbox | B=13/22 V2=18/22 Adv=18/22
+    [PENALTY] AssertionError: 1 specific patterns decayed × 0.8
+  [23] MBPP/24: Base=FAIL(3) Basic=PASS(2)+err Adv=PASS(2)clean | B=13/23 V2=19/23 Adv=19/23
+  [24] MBPP/20: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)toolbox | B=13/24 V2=19/24 Adv=19/24
+  [25] MBPP/27: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=14/25 V2=20/25 Adv=20/25
+    [PENALTY] TypeError: 1 specific patterns decayed × 0.8
+  [26] MBPP/28: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=15/26 V2=21/26 Adv=21/26
+  [27] MBPP/25: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)toolbox | B=15/27 V2=21/27 Adv=21/27
+  [28] MBPP/26: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)clean | B=15/28 V2=21/28 Adv=21/28
+    [PENALTY] NameError: 1 specific patterns decayed × 0.8
+  [29] MBPP/30: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)toolbox | B=15/29 V2=21/29 Adv=21/29
+  [30] MBPP/32: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=16/30 V2=22/30 Adv=22/30
+  >>> Saved (3.7m elapsed, ~1.2m remaining)
+  [31] MBPP/29: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)clean | B=16/31 V2=22/31 Adv=22/31
+  [32] MBPP/35: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=17/32 V2=23/32 Adv=23/32
+  [33] MBPP/34: Base=FAIL(3) Basic=PASS(2)+err Adv=PASS(2)clean | B=17/33 V2=24/33 Adv=24/33
+  [34] MBPP/33: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)clean | B=17/34 V2=24/34 Adv=24/34
+  [35] MBPP/31: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)clean | B=17/35 V2=24/35 Adv=24/35
+  [36] MBPP/37: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=18/36 V2=25/36 Adv=25/36
+  [37] MBPP/38: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=19/37 V2=26/37 Adv=26/37
+  [38] MBPP/40: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=20/38 V2=27/38 Adv=27/38
+  [39] MBPP/36: Base=FAIL(3) Basic=PASS(3)+err Adv=PASS(3)clean | B=20/39 V2=28/39 Adv=28/39
+    [PENALTY] AssertionError: 1 specific patterns decayed × 0.8
+  [40] MBPP/39: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)toolbox | B=20/40 V2=28/40 Adv=28/40
+  >>> Saved (5.6m elapsed, ~0.0m remaining)
+
+======================================================================
+  Final results saved to:
+    Knowledge: puzzle_logic_knowledge.json
+    Log:       puzzle_logic_log.json
+  Elapsed: 5.6 minutes (8.4s per problem)
+  Baseline:    20/40  (50.0%)
+  Basic V2:    28/40  (70.0%)
+  Advanced V2: 28/40  (70.0%)
+======================================================================
+
+Coherent Knowledge Graph (5 patterns, Ω=0.4298700416):
+  [TypeError] λ=0.7 [local] find_missing() takes <N> positional argument but <
+    Line: assert find_missing([1,2,3,5],4) == 4
+    Fix: Fix:   Changed: def find_missing(arr): -> def find_missing(arr, n):;  ...
+    Confidence: 0.50 | VERIFIED | seen 9x, fixed 2x
+  [AssertionError] λ=0.4 [mixed] assert similar_elements((<N>, <N>, <N>, <N>),(<N>,
+    Line: assert similar_elements((3, 4, 5, 6),(5, 7, 4, 10)) == (4, 5
+    Fix: Fix:   Changed: def similar_elements(tuple_list1, tuple_list2): -> def...
+    Confidence: 0.43 | VERIFIED | seen 42x, fixed 9x
+  [AssertionError] λ=0.8 [local] assert multiples_of_num(<N>,<N>)== [<N>,<N>,<N>,<N
+    Line: assert multiples_of_num(4,3)== [3,6,9,12]
+    Fix: Fix:   Changed: def multiples_of_num(n, m): -> def multiples_of_num(m,...
+    Confidence: 0.42 | VERIFIED | seen 3x, fixed 2x
+  [NameError] λ=0.8 [local] name '<name>' is not defined
+    Line: assert remove_dirty_chars("probasscurve", "pros") == 'bacuve
+    Fix: Fix:   Changed: def str_to_list(str1, str2): -> def str_to_list(s):;  ...
+    Confidence: 0.40 | VERIFIED | seen 11x, fixed 2x
+  [TypeError] λ=1.0 [local] int() can't convert non-string with explicit base
+    Line: assert binary_to_decimal(100) == 4
+    Fix: Fix:   Changed: return int(binary, 2) -> return int(str(binary), 2)...
+    Confidence: 0.40 | VERIFIED | seen 2x, fixed 2x
+
+[3/6] Analyzing knowledge graph growth...
+  Graph: 5 → 5 (+0 new, 5 updated)
+
+[4/6] Extracting training data from ALL 4 historical logs...
+
+>>> C:\Users\Tobias Rickert\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\python.exe C:\Users\Tobias Rickert\Desktop\puzzle-logic-ai\scripts\prepare_training_data.py --log C:\Users\Tobias Rickert\Desktop\puzzle-logic-ai\_combined_log_temp.json --output C:\Users\Tobias Rickert\Desktop\puzzle-logic-ai\training_data_iter2.jsonl
+Loading log: C:\Users\Tobias Rickert\Desktop\puzzle-logic-ai\_combined_log_temp.json
+  34 examples from log (passed after retry)
+
+Writing 34 examples to C:\Users\Tobias Rickert\Desktop\puzzle-logic-ai\training_data_iter2.jsonl
+
+Training data summary:
+  Total examples: 34
+
+Sample example:
+  [system] You are a helpful coding assistant. Write clean, correct Python code....
+  [user] Write a function to find the similar elements from the given two tuple lists.
+
+Write a Python functi...
+  [assistant] def similar_elements(tup1, tup2):
+    return tuple(sorted(set(tup1) & set(tup2)))...
+  Total training examples (all iterations): 34
+
+============================================================
+  ITERATION 2 RESULTS
+============================================================
+  Problems:     40
+  Baseline:     20/40 = 50.0%
+  Basic V2:     28/40 = 70.0%
+  Advanced V2:  28/40 = 70.0%
+
+  Knowledge Graph Growth:
+    Before:     5 patterns
+    After:      5 patterns
+    NEW:        0 patterns
+    Updated:    5 patterns
+============================================================
+
+[5/6] Skipping fine-tuning
+[6/6] Skipping merge
+
+======================================================================
+  ITERATION 3 / 3
+  Model: qwen2.5-coder-7b-instruct
+======================================================================
+
+[1/6] Archiving previous log (keeping knowledge graph)...
+  Archived previous log to: puzzle_logic_log_20260430_115133.json
+  Historical logs: 5
+
+[2/6] Running MBPP benchmark (40 problems)...
+  Keep LMStudio running.
+
+>>> C:\Users\Tobias Rickert\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\python.exe C:\Users\Tobias Rickert\Desktop\puzzle-logic-ai\prototype\mbpp_three_way_runner_v26.py --model qwen2.5-coder-7b-instruct --limit 40 --workers 4
+======================================================================
+  MBPP Three-Way Benchmark — v2.6 PIPELINED CONCURRENT
+  Baseline | Basic V2 | Advanced V2 (Omega + λ)
+  Worker threads: 4 (each problem = all 3 modes)
+  Output: puzzle_logic_knowledge.json + puzzle_logic_log.json
+======================================================================
+LM Studio detected: qwen2.5-coder-7b-instruct
+Knowledge graph: 5 existing patterns | Omega=0.4298700416
+======================================================================
+
+Starting 4 workers for 40 problems...
+Each worker processes one problem through all 3 modes (9 LLM calls).
+
+  [1] MBPP/3: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=1/1 V2=1/1 Adv=1/1
+  [2] MBPP/4: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=2/2 V2=2/2 Adv=2/2
+  [3] MBPP/2: Base=FAIL(3) Basic=PASS(2)+err Adv=PASS(2)clean | B=2/3 V2=3/3 Adv=3/3
+  [4] MBPP/7: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=3/4 V2=4/4 Adv=4/4
+  [5] MBPP/6: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)clean | B=3/5 V2=4/5 Adv=4/5
+    [PENALTY] AssertionError: 1 specific patterns decayed × 0.8
+  [6] MBPP/8: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=4/6 V2=5/6 Adv=5/6
+  [7] MBPP/5: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)toolbox | B=4/7 V2=5/7 Adv=5/7
+  [8] MBPP/10: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=5/8 V2=6/8 Adv=6/8
+  [9] MBPP/9: Base=FAIL(3) Basic=PASS(2)+err Adv=PASS(2)clean | B=5/9 V2=7/9 Adv=7/9
+  [10] MBPP/11: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=6/10 V2=8/10 Adv=8/10
+  >>> Saved (1.4m elapsed, ~4.3m remaining)
+    [PENALTY] TypeError: 1 specific patterns decayed × 0.8
+  [11] MBPP/12: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=7/11 V2=9/11 Adv=9/11
+    [PENALTY] AssertionError: 1 specific patterns decayed × 0.8
+  [12] MBPP/1: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)toolbox | B=7/12 V2=9/12 Adv=9/12
+  [13] MBPP/15: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=8/13 V2=10/13 Adv=10/13
+  [14] MBPP/14: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=9/14 V2=11/14 Adv=11/14
+  [15] MBPP/17: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=10/15 V2=12/15 Adv=12/15
+  [16] MBPP/19: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=11/16 V2=13/16 Adv=13/16
+  [17] MBPP/16: Base=FAIL(3) Basic=PASS(2)+err Adv=PASS(2)clean | B=11/17 V2=14/17 Adv=14/17
+  [18] MBPP/13: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)clean | B=11/18 V2=14/18 Adv=14/18
+  [19] MBPP/18: Base=FAIL(3) Basic=PASS(2)+err Adv=PASS(2)clean | B=11/19 V2=15/19 Adv=15/19
+  [20] MBPP/23: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=12/20 V2=16/20 Adv=16/20
+  >>> Saved (2.4m elapsed, ~2.4m remaining)
+    [PENALTY] AssertionError: 1 specific patterns decayed × 0.8
+  [21] MBPP/22: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=13/21 V2=17/21 Adv=17/21
+  [22] MBPP/21: Base=FAIL(3) Basic=PASS(2)+err Adv=PASS(3)toolbox | B=13/22 V2=18/22 Adv=18/22
+    [PENALTY] AssertionError: 1 specific patterns decayed × 0.8
+  [23] MBPP/20: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)toolbox | B=13/23 V2=18/23 Adv=18/23
+  [24] MBPP/24: Base=FAIL(3) Basic=PASS(2)+err Adv=PASS(2)clean | B=13/24 V2=19/24 Adv=19/24
+  [25] MBPP/27: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=14/25 V2=20/25 Adv=20/25
+  [26] MBPP/28: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=15/26 V2=21/26 Adv=21/26
+    [PENALTY] TypeError: 1 specific patterns decayed × 0.8
+  [27] MBPP/25: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)toolbox | B=15/27 V2=21/27 Adv=21/27
+  [28] MBPP/26: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)clean | B=15/28 V2=21/28 Adv=21/28
+  [29] MBPP/29: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)clean | B=15/29 V2=21/29 Adv=21/29
+  [30] MBPP/32: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=16/30 V2=22/30 Adv=22/30
+  >>> Saved (3.6m elapsed, ~1.2m remaining)
+    [PENALTY] NameError: 1 specific patterns decayed × 0.8
+  [31] MBPP/30: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)toolbox | B=16/31 V2=22/31 Adv=22/31
+  [32] MBPP/35: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=17/32 V2=23/32 Adv=23/32
+  [33] MBPP/34: Base=FAIL(3) Basic=PASS(2)+err Adv=PASS(2)clean | B=17/33 V2=24/33 Adv=24/33
+  [34] MBPP/33: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)clean | B=17/34 V2=24/34 Adv=24/34
+  [35] MBPP/37: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=18/35 V2=25/35 Adv=25/35
+  [36] MBPP/38: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=19/36 V2=26/36 Adv=26/36
+  [37] MBPP/31: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)clean | B=19/37 V2=26/37 Adv=26/37
+  [38] MBPP/36: Base=FAIL(3) Basic=PASS(3)+err Adv=PASS(3)clean | B=19/38 V2=27/38 Adv=27/38
+  [39] MBPP/40: Base=PASS(1) Basic=PASS(1)     Adv=PASS(1)clean | B=20/39 V2=28/39 Adv=28/39
+    [PENALTY] AssertionError: 1 specific patterns decayed × 0.8
+  [40] MBPP/39: Base=FAIL(3) Basic=FAIL(3)+err Adv=FAIL(3)toolbox | B=20/40 V2=28/40 Adv=28/40
+  >>> Saved (5.8m elapsed, ~0.0m remaining)
+
+======================================================================
+  Final results saved to:
+    Knowledge: puzzle_logic_knowledge.json
+    Log:       puzzle_logic_log.json
+  Elapsed: 5.8 minutes (8.7s per problem)
+  Baseline:    20/40  (50.0%)
+  Basic V2:    28/40  (70.0%)
+  Advanced V2: 28/40  (70.0%)
+======================================================================
+
+Coherent Knowledge Graph (5 patterns, Ω=0.42584921292800004):
+  [TypeError] λ=0.7 [local] find_missing() takes <N> positional argument but <
+    Line: assert find_missing([1,2,3,5],4) == 4
+    Fix: Fix:   Changed: def find_missing(arr): -> def find_missing(arr, n):;  ...
+    Confidence: 0.50 | VERIFIED | seen 17x, fixed 3x
+  [AssertionError] λ=0.9 [local] assert multiples_of_num(<N>,<N>)== [<N>,<N>,<N>,<N
+    Line: assert multiples_of_num(4,3)== [3,6,9,12]
+    Fix: Fix:   Changed: def multiples_of_num(n, m): -> def multiples_of_num(m,...
+    Confidence: 0.42 | VERIFIED | seen 5x, fixed 3x
+  [AssertionError] λ=0.4 [mixed] assert similar_elements((<N>, <N>, <N>, <N>),(<N>,
+    Line: assert similar_elements((3, 4, 5, 6),(5, 7, 4, 10)) == (4, 5
+    Fix: Fix:   Changed: def similar_elements(tuple_list1, tuple_list2): -> def...
+    Confidence: 0.41 | VERIFIED | seen 64x, fixed 13x
+  [NameError] λ=0.8 [local] name '<name>' is not defined
+    Line: assert remove_dirty_chars("probasscurve", "pros") == 'bacuve
+    Fix: Fix:   Changed: def str_to_list(str1, str2): -> def str_to_list(s):;  ...
+    Confidence: 0.40 | VERIFIED | seen 18x, fixed 3x
+  [TypeError] λ=1.0 [local] int() can't convert non-string with explicit base
+    Line: assert binary_to_decimal(100) == 4
+    Fix: Fix:   Changed: return int(binary, 2) -> return int(str(binary), 2)...
+    Confidence: 0.40 | VERIFIED | seen 3x, fixed 3x
+
+[3/6] Analyzing knowledge graph growth...
+  Graph: 5 → 5 (+0 new, 5 updated)
+
+[4/6] Extracting training data from ALL 6 historical logs...
+
+>>> C:\Users\Tobias Rickert\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\python.exe C:\Users\Tobias Rickert\Desktop\puzzle-logic-ai\scripts\prepare_training_data.py --log C:\Users\Tobias Rickert\Desktop\puzzle-logic-ai\_combined_log_temp.json --output C:\Users\Tobias Rickert\Desktop\puzzle-logic-ai\training_data_iter3.jsonl
+Loading log: C:\Users\Tobias Rickert\Desktop\puzzle-logic-ai\_combined_log_temp.json
+  50 examples from log (passed after retry)
+
+Writing 50 examples to C:\Users\Tobias Rickert\Desktop\puzzle-logic-ai\training_data_iter3.jsonl
+
+Training data summary:
+  Total examples: 50
+
+Sample example:
+  [system] You are a helpful coding assistant. Write clean, correct Python code....
+  [user] Write a function to find the similar elements from the given two tuple lists.
+
+Write a Python functi...
+  [assistant] def similar_elements(tup1, tup2):
+    return tuple(sorted(set(tup1) & set(tup2)))...
+  Total training examples (all iterations): 50
+
+============================================================
+  ITERATION 3 RESULTS
+============================================================
+  Problems:     40
+  Baseline:     20/40 = 50.0%
+  Basic V2:     28/40 = 70.0%
+  Advanced V2:  28/40 = 70.0%
+
+  Knowledge Graph Growth:
+    Before:     5 patterns
+    After:      5 patterns
+    NEW:        0 patterns
+    Updated:    5 patterns
+============================================================
+
+[5/6] Skipping fine-tuning
+[6/6] Skipping merge
+
+======================================================================
+  SELF-TRAINING LOOP COMPLETE
+======================================================================
+  Iteration 1: B=50.0%  Ba=70.0%  Ad=72.5%
+  Iteration 2: B=50.0%  Ba=70.0%  Ad=70.0%
+  Iteration 3: B=50.0%  Ba=70.0%  Ad=70.0%
+======================================================================

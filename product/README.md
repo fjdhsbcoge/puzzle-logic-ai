@@ -1,4 +1,4 @@
-# Puzzle Logic Agent v2.0
+# 🧩 Puzzle Logic Agent v2.4
 
 **Empirical constraint satisfaction for coding.**
 
@@ -6,7 +6,7 @@ The agent generates code, executes it, catches errors, queries a learned knowled
 
 ---
 
-## Quick Start (Web UI -- Recommended)
+## 🚀 Quick Start (Web UI -- Recommended)
 
 The easiest way to use the agent is through the browser interface.
 
@@ -31,7 +31,7 @@ That's it! No more command-line flags or PowerShell confusion.
 
 ---
 
-## File Management
+## 📎 File Management
 
 The web UI supports loading and unloading multiple code files:
 
@@ -60,7 +60,7 @@ Files are automatically tagged with their language for syntax highlighting. When
 
 ---
 
-## How It Works (The Puzzle Logic Loop)
+## ⚙️ How It Works (The Puzzle Logic Loop)
 
 ```
   GENERATE ----> EXECUTE ----> PASS? --YES--> LEARN (record fix)
@@ -88,7 +88,7 @@ The key insight: **the compiler IS the constraint engine.** Its output tells us 
 
 ---
 
-## Web UI Features
+## 🖥️ Web UI Features
 
 - **Chat tab**: Type natural language requests, get streaming responses with markdown and syntax highlighting
 - **Fix + Test tab**: Paste your code and optional tests, run the full Puzzle Logic loop
@@ -101,7 +101,7 @@ The key insight: **the compiler IS the constraint engine.** Its output tells us 
 
 ---
 
-## Commands
+## ⌨️ Commands
 
 ```bash
 # Generate code from a natural language description
@@ -122,7 +122,7 @@ python puzzle_logic_server.py --backend ollama --port 8080
 
 ---
 
-## Knowledge Persistence
+## 💾 Knowledge Persistence
 
 Your learned patterns are stored in `puzzle_logic_knowledge.json`. This file grows as you use the agent:
 
@@ -152,7 +152,7 @@ The knowledge graph stores *structural* fix patterns, not full code:
 
 ---
 
-## Architecture
+## 🏗️ Architecture
 
 - **Synapse** (`LMStudioClient` / `OllamaBackend`): The LLM that generates code
 - **OS** (`ErrorPatternGraph`): The constraint engine that validates and maintains belief state
@@ -163,7 +163,7 @@ This is the **Synapse x OS** architecture: the LLM generates candidates, the OS 
 
 ---
 
-## Backend Options
+## 🔌 Backend Options
 
 ### LM Studio (Default)
 - Download: https://lmstudio.ai
@@ -182,7 +182,7 @@ Switch backends in the web UI sidebar, or use `--backend ollama` on the command 
 
 ---
 
-## Limitations
+## ⚠️ Limitations
 
 - Requires LM Studio or Ollama running locally
 - Error patterns are classified by error type + signature -- not by deep causal program analysis
@@ -191,7 +191,7 @@ Switch backends in the web UI sidebar, or use `--backend ollama` on the command 
 
 ---
 
-## Roadmap
+## 🗺️ Roadmap
 
 - VS Code extension
 - Support for pytest/unittest test discovery
@@ -202,7 +202,7 @@ Switch backends in the web UI sidebar, or use `--backend ollama` on the command 
 
 ---
 
-## Files
+## 📁 Files
 
 | File | Description |
 |------|-------------|
@@ -214,6 +214,6 @@ Switch backends in the web UI sidebar, or use `--backend ollama` on the command 
 
 ---
 
-## License
+## 📜 License
 
 MIT

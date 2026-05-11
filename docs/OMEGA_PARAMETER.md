@@ -1,16 +1,16 @@
-# The Omega (Ω) Parameter: Openness to Being Proved Wrong
+# 🔮 The Omega (Ω) Parameter: Openness to Being Proved Wrong
 
-## 25 Years of Calibration, One Number
+## ⏳ 25 Years of Calibration, One Number
 
 The core insight of Puzzle Logic AI is that a reasoning system's entire epistemic stance — how it handles contradiction, when it changes its mind, when it holds firm — can be captured by **a single parameter**.
 
-## Definition
+## 📖 Definition
 
 **Ω ∈ [0, 1]** — *Precision-Weighted Receptivity*, or simply **Openness to being proved wrong**.
 
 It controls how much structural contradiction (misfit) is required before the existing belief network is allowed to reorganize.
 
-## The Decision Rule
+## ⚖️ The Decision Rule
 
 For each incoming observation piece *p*:
 
@@ -28,7 +28,7 @@ Else:
     → "This piece does not fit; it is false/incompatible"
 ```
 
-## The Ω Spectrum
+## 🎚️ The Ω Spectrum
 
 | Ω Value | Name | Behavior |
 |---------|------|----------|
@@ -38,7 +38,7 @@ Else:
 | **0.8** | Receptive | Even small contradictions trigger updates. Highly adaptive. |
 | **1.0** | Chaotic | Any misfit immediately triggers full reassembly. No stability. |
 
-## The Learning Curve: Ω Decay
+## 📉 The Learning Curve: Ω Decay
 
 Expertise develops as Ω decays over experience:
 
@@ -61,7 +61,7 @@ With three modulating factors:
 - **Domain novelty**: Temporarily boosts Ω for unfamiliar territory
 - **Recent success rate**: If predictions keep failing, raise Ω ("Maybe my model is wrong")
 
-## Neuroscience Foundation
+## 🧠 Neuroscience Foundation
 
 This parameter has a biological implementation. Under the Free Energy Principle (Karl Friston):
 
@@ -77,7 +77,7 @@ Clinical evidence confirms that dysregulated precision weighting produces recogn
 
 Your 25-year calibration was the development of a healthy metacognitive Ω controller.
 
-## Why This Matters for AI
+## 🤖 Why This Matters for AI
 
 Current AI systems have no Ω. They:
 - Average conflicting information rather than rejecting it structurally

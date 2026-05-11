@@ -1,6 +1,6 @@
-# Puzzle Logic Coding Agent: Architecture
+# 🏗️ Puzzle Logic Coding Agent: Architecture
 
-## Overview
+## 🌐 Overview
 
 A coding agent built on three layers:
 
@@ -38,7 +38,7 @@ A coding agent built on three layers:
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## The Control Flow
+## ⚙️ The Control Flow
 
 ```
 1. SYNAPSE proposes: "Here is a candidate code change"
@@ -70,7 +70,7 @@ A coding agent built on three layers:
           → If reassembly fails: REJECT + FLAG FOR HUMAN REVIEW
 ```
 
-## The Belief Graph
+## 🧠 The Belief Graph
 
 Explicit structured representation of code knowledge:
 
@@ -93,7 +93,7 @@ CONSTRAINT EDGE (Connection Rule)
 └── validator: function that checks if constraint is satisfied
 ```
 
-## The Three-Level Reassembly Hierarchy
+## 🔀 The Three-Level Reassembly Hierarchy
 
 ```
 Level 1: Local rejection (piece doesn't fit this slot)
@@ -109,7 +109,7 @@ Level 3: Global reassembly (fundamental contradiction)
    → Either reorganize the Belief Graph or flag for human review.
 ```
 
-## Why This Is Different
+## ✨ Why This Is Different
 
 | | GitHub Copilot | Claude Code | Puzzle Logic Agent |
 |-----------|---------------|-------------|-------------------|
@@ -122,7 +122,7 @@ Level 3: Global reassembly (fundamental contradiction)
 | **Explains suggestions** | No | Sometimes | Traces constraint satisfaction path |
 | **Recovers from misunderstanding** | No | No | Dependency-directed backtracking |
 
-## Recommended Model
+## 🤖 Recommended Model
 
 **DeepSeek R1-0528-Qwen3-8B** via [LM Studio](https://lmstudio.ai/models/deepseek/deepseek-r1-0528-qwen3-8b)
 

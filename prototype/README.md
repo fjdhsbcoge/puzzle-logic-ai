@@ -1,8 +1,8 @@
-# Prototype: Puzzle Logic Coding Agent
+# 🧪 Prototype: Puzzle Logic Coding Agent
 
 This is a minimal but functional prototype demonstrating the Puzzle Logic architecture.
 
-## Architecture in This Prototype
+## 🏗️ Architecture in This Prototype
 
 ```
 humaneval_runner.py -> lmstudio_client.py  (Synapse)
@@ -11,7 +11,7 @@ humaneval_runner.py -> lmstudio_client.py  (Synapse)
     constraint_engine.py  (OS - hard constraints)
 ```
 
-## The Primary Benchmark: HumanEval
+## 🧪 The Primary Benchmark: HumanEval
 
 We use the **OpenAI HumanEval** benchmark — the industry standard for code generation evaluation. It contains **164 hand-written Python programming problems** with test cases. Published baselines exist for every major model (GPT-4, Claude, CodeLlama, DeepSeek, etc.).
 
@@ -72,7 +72,7 @@ The **same model** with **same weights** generates the candidates. What changes 
 
 Your local 8B model will likely score somewhere in the 30-60% range. The question is: **does the OS improve that score by learning from errors?**
 
-## Run the HumanEval Benchmark
+## 🏃 Run the HumanEval Benchmark
 
 ### Prerequisites
 
@@ -135,7 +135,7 @@ python humaneval_runner.py --mode both --limit 5
 python humaneval_runner.py --mode both --debug
 ```
 
-## Expected Output
+## 📊 Expected Output
 
 ```
 ======================================================================
@@ -154,7 +154,7 @@ IMPROVEMENT: +10.4 percentage points
 RELATIVE GAIN: 38% more problems solved
 ```
 
-## The Simple Demos
+## 🎮 The Simple Demos
 
 If you just want to see the agent in action without running the full benchmark:
 
@@ -163,13 +163,13 @@ python demo.py                # Success demonstration
 python demo_rejection.py      # Rejection demonstration
 ```
 
-## The Omega Parameter
+## 🔮 The Omega Parameter
 
 In the OS mode, Omega starts at **0.5** (balanced). A candidate is accepted if its structural tension (test failures) is below `1 - Omega = 0.5`. The OS tries up to k candidates and picks the one with the lowest tension.
 
 If no candidate passes, Omega is temporarily raised for the next problem (the agent becomes more open). This demonstrates metacognitive adaptation.
 
-## Limitations of the Prototype
+## ⚠️ Limitations of the Prototype
 
 - Simple regex-based code extraction from LLM output
 - No reassembly engine yet (Phase 2 in ROADMAP.md)
@@ -178,7 +178,7 @@ If no candidate passes, Omega is temporarily raised for the next problem (the ag
 - Belief Graph is minimal (function names only)
 - HumanEval is relatively small (164 problems); larger benchmarks (HumanEval+, MBPP) exist
 
-## Files
+## 📁 Files
 
 | File | Purpose |
 |------|---------|

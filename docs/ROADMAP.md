@@ -1,12 +1,12 @@
-# Roadmap
+# 🗺️ Roadmap
 
-## Status: Phase 0 — Concept & Architecture
+## 🎯 Status: Phase 0 — Concept & Architecture
 
 We have the conceptual framework, formal model, and architecture specification. Implementation has not yet begun. This document outlines the path from concept to working system.
 
 ---
 
-## Phase 1: Minimum Viable Prototype
+## 🔧 Phase 1: Minimum Viable Prototype
 
 **Goal:** Demonstrate that the Ω-gated decision loop works for a trivial coding task.
 
@@ -28,7 +28,7 @@ The agent accepts code that compiles and passes tests, and rejects code that bre
 
 ---
 
-## Phase 2: Self-Correction
+## 🔁 Phase 2: Self-Correction
 
 **Goal:** The agent triggers reassembly when code breaks constraints.
 
@@ -50,7 +50,7 @@ The agent recovers from its own errors without human intervention.
 
 ---
 
-## Phase 3: Architecture Awareness
+## 🏛️ Phase 3: Architecture Awareness
 
 **Goal:** The agent maintains a model of project structure and architectural conventions.
 
@@ -72,7 +72,7 @@ The agent behaves like a junior developer who has read and understood the codeba
 
 ---
 
-## Phase 4: Persistent Expertise
+## 💾 Phase 4: Persistent Expertise
 
 **Goal:** The agent accumulates expertise across sessions and projects.
 
@@ -93,7 +93,7 @@ The agent behaves like a developer who has been on the team for months.
 
 ---
 
-## Open Questions
+## ❓ Open Questions
 
 These are the hard problems that need solving:
 
@@ -111,7 +111,7 @@ These are the hard problems that need solving:
 
 ---
 
-## How to Contribute
+## 🤝 How to Contribute
 
 ### Immediate Needs
 - **Prototype implementation**: A Python script demonstrating the Ω-gated loop

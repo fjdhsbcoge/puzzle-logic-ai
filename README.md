@@ -1,131 +1,255 @@
-# Puzzle Logic Agent v2.0
+# Puzzle Logic Agent
 
-**Empirical constraint satisfaction for coding.**
+An empirical, psychology-inspired constraint satisfaction system for code generation. The agent learns from compiler errors and builds a knowledge graph of verified fix patterns.
 
-The agent generates code, executes it, catches errors, queries a learned knowledge graph for fix patterns, retries with hints, and records validated solutions — so it gets smarter over time.
+## Philosophy
 
----
+> **"Creativity: Create something, from the sum of your Memory, that has not been in the memory before."**
 
-## Recommended: Open WebUI + Puzzle Logic Pipeline
-
-The best experience is using **Open WebUI** (a free, open-source chat interface) with our **Puzzle Logic Pipeline** plugin. This gives you:
-
-- **Conversation memory** (remembers context across messages)
-- **Drag & drop file upload** (multiple files, any code format)
-- **Beautiful dark UI** with markdown, code highlighting, streaming
-- **Auto-execution**: code runs in sandbox, errors caught, knowledge graph consulted
-- **Works with LM Studio or Ollama** (any OpenAI-compatible backend)
-
-### Quick Start
-
-```bash
-# 1. Install Open WebUI (requires Python 3.11+)
-pip install open-webui
-
-# 2. Start your LLM backend FIRST
-#    LM Studio: Load model, Developer tab -> Start Server (port 1234)
-#    Ollama: ollama serve (port 11434)
-
-# 3. Start Open WebUI
-open-webui serve
-
-# 4. Open browser to http://localhost:8080
-#    - Sign in (create any account, it's local-only)
-#    - Go to Settings -> Admin Panel -> Settings -> Connections
-#    - Add OpenAI API connection: http://localhost:1234/v1 (for LM Studio)
-#    - Or: http://localhost:11434/v1 (for Ollama)
-
-# 5. Copy the Pipeline file to Open WebUI's pipelines folder
-mkdir -p ~/.config/open-webui/pipelines
-cp pipeline/puzzle_logic_pipeline.py ~/.config/open-webui/pipelines/
-cp product/puzzle_logic_agent.py ~/.config/open-webui/pipelines/
-
-# 6. In Open WebUI chat, select "Puzzle Logic" from the model dropdown
-#    Drag a .py file into the chat, type "fix this", send
-```
-
----
-
-## Alternative: Standalone Web UI
-
-If you prefer not to install Open WebUI, use our built-in web server.
-Conversation memory is limited (saves to browser localStorage only).
-
-```bash
-python product/puzzle_logic_server.py
-# Open browser to http://localhost:8080
-```
-
----
-
-## Alternative: Command Line
-
-```bash
-# Generate code
-python product/puzzle_logic_agent.py --generate "Write a function..."
-
-# Fix a file with tests
-python product/puzzle_logic_agent.py broken.py --test test_broken.py --attempts 3
-
-# See knowledge graph stats
-python product/puzzle_logic_agent.py --stats
-```
-
----
-
-## How It Works
-
-```
-  GENERATE ----> EXECUTE ----> PASS? --YES--> LEARN (record fix)
-                    |
-                   NO
-                    v
-             CATCH ERROR
-                    |
-                    v
-         QUERY KNOWLEDGE GRAPH
-         "Seen this error before?"
-                    |
-                    v
-          RETRIEVE FIX TOOLBOX
-     (past patterns as options, not directives)
-                    |
-                    v
-               RETRY + HINT
-                    |
-                    v
-                 PASS? --YES--> LEARN
-```
-
----
-
-## File Management
-
-All interfaces support loading and unloading code files:
-
-| Action | How |
-|--------|-----|
-| Attach file(s) | Drag & drop, or click paperclip |
-| Remove one file | Click the X on the file pill |
-| Remove all files | Click "Clear all" |
-| Preview contents | Open file preview panel |
-
-### Supported Formats
-
-Python, JavaScript, TypeScript, C, C++, Java, Go, Rust, Swift, Kotlin, Ruby, PHP, HTML, CSS, JSON, YAML, SQL, Shell, Markdown, Text, CSV
-
----
+Puzzle Logic treats code generation as a **creative synthesis** problem. When the LLM fails, the system doesn't just copy old fixes — it combines insights from multiple proven patterns into novel solutions.
 
 ## Architecture
 
-- **Synapse** (LLM): LM Studio or Ollama — generates code
-- **OS** (`ErrorPatternGraph`): Validates against compiler output
-- **Sandbox** (`execute_code`): Subprocess execution with timeout
-- **Toolbox** (`get_fix_toolbox`): Patterns as options, not directives
-- **Pipeline** (Open WebUI): Intercepts requests, runs loop, formats results
+```
+┌─────────────┐     ┌──────────────┐     ┌─────────────┐
+│   You       │────▶│   Aider      │────▶│  LLM (local)│
+│ (task desc) │     │  (orchestrate)│     │  7B/14B     │
+└─────────────┘     └──────┬───────┘     └─────────────┘
+                           │
+                    ┌──────▼──────┐
+                    │   Tests     │◀── pytest
+                    │ (pass/fail) │
+                    └──────┬──────┘
+                           │
+                    ┌──────▼──────┐
+                    │ Puzzle Logic│───▶ Knowledge Graph
+                    │  (on fail)  │◀───── Creative Toolbox
+                    └──────┬──────┘
+                           │
+                    ┌──────▼──────┐
+                    │   LLM       │───▶ Retry with enriched prompt
+                    │  (retry)    │     + toolbox + orientation
+                    └─────────────┘
+```
 
----
+## Key Concepts
+
+### OCEAN-C Personality Model
+
+Each error pattern has a 5-dimensional personality profile:
+
+| Trait | Meaning | How It Changes |
+|---|---|---|
+| **O** — Openness | Cross-context applicability | +0.14 on new context success |
+| **C** — Confidence | Verified reliability (earned trust) | +0.10 on success, ×decay on failure |
+| **E** — Extraversion | Omega (relational) vs direct orientation | Emergent: omega_selections / total |
+| **A** — Agreeableness | LLM compliance rate | times_followed / times_shown |
+| **N** — Neuroticism | Emotional stability (controls decay) | ±0.01 per outcome, bounded ±50% of birth |
+
+### Creative Mode (v4.5)
+
+Instead of showing one pattern from the same error type, the toolbox presents **3 ingredients from different error types**. The LLM synthesizes a novel solution by combining cross-domain insights.
+
+### Inward/Outward Orientation
+
+The model's attention direction shifts based on aggregate confidence:
+
+| Confidence | Orientation | Behavior |
+|---|---|---|
+| C < 0.4 | **Outward** | Observe environment, build understanding from outside in |
+| 0.4 ≤ C < 0.7 | **Balanced** | Cross-reference toolbox with actual error |
+| C ≥ 0.7 | **Inward** | Trust proven patterns decisively |
+
+### N Envelope (v4.4)
+
+Neuroticism stays within **±50% of its birth value**. No more death spirals:
+- Default birth N = 0.20 → envelope [0.10, 0.30]
+- Decay stays between 0.70–0.90 (predictable, bounded)
+
+## Requirements
+
+- Python 3.9+
+- [Aider](https://aider.chat/) (AI pair programming)
+- [LM Studio](https://lmstudio.ai/) or similar (local LLM server)
+- Compatible LLM (7B minimum for Aider, 14B recommended)
+
+## Hardware Recommendations
+
+| GPU VRAM | Model | Workers | Notes |
+|---|---|---|---|
+| 12GB | Qwen 2.5 Coder 14B | 1-2 | Best quality, fits comfortably |
+| 12GB | Qwen 2.5 Coder 7B | 3-4 | Fast iteration, good quality |
+| 16GB+ | Qwen 2.5 Coder 14B | 2-3 | Headroom for larger projects |
+
+**Avoid:** <7B models (cannot handle Aider's diff format), MoE models (uneven quality).
+
+## Quick Start
+
+### Step 1: Install Dependencies
+
+```bash
+pip install aider-chat pytest
+```
+
+### Step 2: Set Up Your Project
+
+Create a project folder and copy the bridge:
+
+```bash
+mkdir my_app
+cd my_app
+cp /path/to/puzzle-logic/aider_bridge.py ./
+mkdir tests
+touch tests/__init__.py
+```
+
+Create `.gitignore`:
+```
+# Puzzle Logic auto-generated files
+.puzzle_logic_knowledge.json
+.puzzle_logic_failure_log.json
+.puzzle_logic_toolbox.md
+```
+
+### Step 3: Launch LM Studio
+
+1. Open LM Studio
+2. Load your model (e.g., Qwen 2.5 Coder 14B)
+3. Start the server on port 1234
+
+### Step 4: Launch Aider with Puzzle Logic
+
+```bash
+aider \
+  --model openai/qwen2.5-coder-14b-instruct \
+  --api-key openai=not-needed \
+  --openai-api-base http://localhost:1234/v1 \
+  --test-cmd "python aider_bridge.py --test" \
+  --dark-mode
+```
+
+**Windows PowerShell:**
+```powershell
+$env:OPENAI_API_BASE = "http://localhost:1234/v1"
+aider `
+  --model openai/qwen2.5-coder-14b-instruct `
+  --api-key openai=not-needed `
+  --openai-api-base http://localhost:1234/v1 `
+  --test-cmd "python aider_bridge.py --test" `
+  --dark-mode
+```
+
+### Step 5: Start Building
+
+Give Aider a task that includes a test:
+
+```
+Create tests/test_math.py:
+
+def test_circle_area():
+    from app import circle_area
+    assert circle_area(10) == 314.16
+
+Now implement circle_area(radius) in app.py.
+```
+
+After Aider generates code, trigger your bridge manually:
+```
+/run python aider_bridge.py --test
+```
+
+**If the test fails**, you'll see:
+```
+[Creative Toolbox — Synthesis Ingredients]
+ORIENTATION: You are in OBSERVE mode...
+Ingredient 1 [TypeError]: ...
+CREATE: Combine ingredients into a solution for YOUR code.
+```
+
+**If the test passes** after a failure:
+```
+[Puzzle Logic] Fix recorded to knowledge graph: TypeError
+```
+
+## How It Works
+
+### The Learning Loop
+
+1. **Aider generates code** → runs via bridge
+2. **pytest fails** → bridge extracts error signature
+3. **Knowledge graph queried** → returns Creative Toolbox
+4. **Toolbox injected into retry prompt** → LLM synthesizes fix
+5. **pytest passes** → bridge records successful fix to graph
+6. **Pattern confidence grows** → available for future errors
+
+### Curriculum Learning
+
+For best results, follow this progression:
+
+| Phase | Task Type | Goal |
+|---|---|---|
+| **1** | Structural fixes (TypeError, NameError) | Master mechanical corrections |
+| **2** | Logic fixes (AssertionError, ValueError) | Learn algorithmic patterns |
+| **3** | Creative synthesis (multi-domain) | Combine ingredients from different errors |
+
+## Files
+
+| File | Purpose |
+|---|---|
+| `personality_engine.py` | OCEAN-C knowledge graph, creative toolbox |
+| `model_personality.py` | Aggregate agent personality, orientation system |
+| `utils.py` | Error fingerprinting, principle generation, code delta |
+| `ocean_config.py` | Tunable parameters (all knobs in one file) |
+| `constraint_engine.py` | Structural auto-fixer for local errors |
+| `puzzle_logic_agent.py` | Main agent with baseline/basic/advanced modes |
+| `aider_bridge.py` | Aider integration (place in your project) |
+| `test_puzzle_logic.py` | 46 integration tests |
+
+## Configuration
+
+Edit `ocean_config.py` to tune behavior:
+
+```python
+class PatternDynamics:
+    SUCCESS_CONFIDENCE_BOOST: float = 0.10   # How much C grows per fix
+    NEUROTICISM_STEP: float = 0.01             # How fast N shifts
+    NEUROTICISM_MIN: float = 0.20             # Floor for N
+    NEUROTICISM_MAX: float = 0.80             # Ceiling for N
+
+class CompositeWeights:
+    OPENNESS: float = 0.15       # Reward generalists
+    CONFIDENCE: float = 0.35     # Reward proven patterns (highest weight)
+    EXTRAVERSION: float = 0.15   # Reward novel associations (creative mode)
+    AGREEABLENESS: float = 0.25  # Reward LLM compliance
+    NEUROTICISM: float = -0.15  # Penalize unstable patterns
+    FLOOR: float = 0.08          # Minimum score to enter toolbox
+```
+
+## Troubleshooting
+
+### "No verified patterns for X yet"
+This is normal on first encounters. The graph builds knowledge over time. After 20-30 problems in a domain, you'll have solid patterns.
+
+### Model hangs on commit messages
+Use `--no-auto-commit` flag, or switch to a larger model (7B minimum, 14B recommended).
+
+### "The LLM did not conform to the edit format"
+Context too long for the model. Use `/clear` in Aider, or switch to a model with larger context window.
+
+### Puzzle Logic never activates
+Ensure:
+1. `aider_bridge.py` is in your project directory
+2. You're using `/run python aider_bridge.py --test` (not letting Aider auto-run flake8)
+3. Your tests check **logic**, not just imports (flake8 catches import errors first)
 
 ## License
 
-MIT
+MIT License
+
+## Acknowledgments
+
+Inspired by:
+- Carl Jung's psychological types (consciousness tiers)
+- OCEAN personality model (adapted for error patterns)
+- John Ousterhout's deep modules philosophy
+- Aider's agentic coding paradigm
